@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Роботи — Avrrora</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth;}
+body{margin:0;background:#f7f7fb;color:#0b0b16;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
+a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff2;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+</style>
+</head>
+<body>
+<nav style="position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:26px;padding:11px 26px;border-radius:100px;background:rgba(255,255,255,0.7);backdrop-filter:blur(22px) saturate(1.7);-webkit-backdrop-filter:blur(22px) saturate(1.7);border:1px solid rgba(11,11,22,0.08);box-shadow:0 10px 34px rgba(11,11,22,0.1);white-space:nowrap;">
+  <a href="index.html" style="font-family:'Unbounded',sans-serif;font-weight:600;font-size:15px;color:#0b0b16;letter-spacing:.04em;">Avrrora</a>
+  <div style="display:flex;gap:20px;font-size:14px;font-weight:600;">
+    <a href="index.html" style="color:#3c3c50;">Головна</a>
+    <a href="about.html" style="color:#3c3c50;">Про нас</a>
+    <a href="works.html" style="color:#7a3ff2;">Роботи</a>
+    <a href="services.html" style="color:#3c3c50;">Послуги</a>
+    <a href="faq.html" style="color:#3c3c50;">FAQ</a>
+    <a href="contacts.html" style="color:#3c3c50;">Контакти</a>
+  </div>
+</nav>
+<header style="width:min(1200px,92vw);margin:0 auto;padding:160px 0 40px;">
+  <p style="margin:0 0 14px;font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:#7a3ff2;">Портфоліо</p>
+  <h1 style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(34px,5vw,60px);line-height:1.12;letter-spacing:-0.01em;">Наші роботи</h1>
+  <p style="margin:20px 0 0;max-width:600px;font-size:18px;line-height:1.7;color:#5c5c72;text-wrap:pretty;">Реальні клієнтки, реальне світло салону — без фільтрів. Натисніть на фото, щоб роздивитися ближче.</p>
+</header>
+<section style="width:min(1200px,92vw);margin:0 auto;padding:0 0 60px;">
+  <p style="margin:0 0 16px;font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:#7a3ff2;">До / після</p>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;align-items:start;">
+    <div id="ba" style="position:relative;border-radius:24px;overflow:hidden;box-shadow:0 14px 40px rgba(11,11,22,0.12);user-select:none;touch-action:none;aspect-ratio:3/4;">
+      <img src="images/before-after.jpg" alt="Після — рожевий блонд" draggable="false" style="position:absolute;inset:0;width:200%;height:100%;object-fit:cover;margin-left:-100%;display:block;pointer-events:none;"/>
+      <div id="ba-clip" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;clip-path:inset(0 50% 0 0);">
+        <img src="images/before-after.jpg" alt="До" draggable="false" style="width:200%;height:100%;object-fit:cover;display:block;"/>
+        <span style="position:absolute;left:16px;top:16px;padding:6px 14px;border-radius:100px;background:rgba(11,11,22,0.6);backdrop-filter:blur(8px);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">До</span>
+      </div>
+      <span style="position:absolute;right:16px;top:16px;padding:6px 14px;border-radius:100px;background:rgba(122,63,242,0.75);backdrop-filter:blur(8px);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;">Після</span>
+      <div id="ba-divider" style="position:absolute;top:0;bottom:0;width:3px;background:#fff;box-shadow:0 0 14px rgba(0,0,0,0.4);pointer-events:none;left:50%;">
+        <span style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:15px;color:#7a3ff2;box-shadow:0 6px 20px rgba(0,0,0,0.3);font-weight:800;">⇔</span>
+      </div>
+    </div>
+    <div style="padding:10px 80px 10px 6px;">
+      <h2 style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(22px,2.6vw,30px);line-height:1.25;">Трансформація за один візит</h2>
+      <p style="margin:16px 0 0;font-size:16px;line-height:1.75;color:#5c5c72;max-width:460px;text-wrap:pretty;">Потягніть повзунок, щоб порівняти. Тут — перехід у холодний рожевий блонд: знебарвлення, тонування і доглядовий ритуал, який зберіг довжину живою.</p>
+      <p style="margin:14px 0 0;font-size:14px;color:#7a3ff2;font-weight:700;">Фарбування + тонування · від 3 500 грн</p>
+    </div>
+  </div>
+</section>
+<section style="width:min(1200px,92vw);margin:0 auto;padding:0 0 100px;">
+  <div id="works-filters" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px;"></div>
+  <div id="works-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;"></div>
+  <div style="margin-top:50px;text-align:center;">
+    <p style="margin:0 0 18px;font-size:16px;color:#5c5c72;">Сподобалось? Подивіться, скільки це коштує.</p>
+    <a href="services.html" style="display:inline-block;padding:15px 30px;border-radius:100px;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-weight:700;font-size:15px;box-shadow:0 12px 34px rgba(122,63,242,0.4);transition:transform .35s;" style-hover="color:#fff;transform:translateY(-3px);">Послуги та ціни</a>
+  </div>
+</section>
+<div id="lightbox" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(8,8,15,0.92);backdrop-filter:blur(14px);align-items:center;justify-content:center;padding:5vh 5vw;cursor:zoom-out;">
+  <figure style="margin:0;max-width:100%;max-height:100%;display:flex;flex-direction:column;align-items:center;gap:16px;">
+    <img id="lightbox-img" src="" alt="" style="max-width:100%;max-height:82vh;border-radius:18px;box-shadow:0 30px 90px rgba(0,0,0,0.6);"/>
+    <figcaption id="lightbox-cap" style="color:#fff;font-size:15px;font-weight:600;"></figcaption>
+  </figure>
+  <button id="lightbox-close" type="button" style="position:absolute;top:22px;right:26px;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,0.3);background:rgba(255,255,255,0.1);color:#fff;font-size:20px;cursor:pointer;">✕</button>
+</div>
+<div style="position:fixed;right:20px;bottom:20px;z-index:110;display:flex;flex-direction:column;gap:12px;">
+  <a href="https://instagram.com/avrrorabeauty" title="Instagram" style="display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.88);backdrop-filter:blur(10px);border:1px solid rgba(11,11,22,0.1);color:#7a3ff2;font-family:'Unbounded',sans-serif;font-size:13px;font-weight:600;box-shadow:0 10px 26px rgba(11,11,22,0.18);transition:transform .3s;" style-hover="color:#7a3ff2;transform:translateY(-3px);">IG</a>
+  <a href="tel:+380987779898" title="Подзвонити" style="display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-size:24px;box-shadow:0 12px 30px rgba(122,63,242,0.45);transition:transform .3s;" style-hover="color:#fff;transform:translateY(-3px);">✆</a>
+</div>
+<footer style="background:#08080f;color:#fff;padding:70px 0 40px;">
+  <div style="width:min(1200px,92vw);margin:0 auto;display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+    <div>
+      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:600;font-size:22px;">Avrrora</p>
+      <p style="margin:10px 0 0;font-size:14px;color:rgba(255,255,255,0.6);max-width:280px;line-height:1.6;">Салон краси у Києві. Вул. Січових Стрільців, 77 · щодня 9:00–20:00</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:15px;font-weight:600;">
+      <a href="about.html" style="color:rgba(255,255,255,0.8);">Про нас</a>
+      <a href="works.html" style="color:rgba(255,255,255,0.8);">Роботи</a>
+      <a href="services.html" style="color:rgba(255,255,255,0.8);">Послуги</a>
+      <a href="faq.html" style="color:rgba(255,255,255,0.8);">FAQ</a>
+      <a href="contacts.html" style="color:rgba(255,255,255,0.8);">Контакти</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:15px;font-weight:600;">
+      <a href="tel:+380987779898" style="color:#fff;">098 777 98 98</a>
+      <a href="https://instagram.com/avrrorabeauty" style="color:#b7a3ff;">@avrrorabeauty</a>
+    </div>
+  </div>
+  <p style="width:min(1200px,92vw);margin:50px auto 0;font-size:12px;color:rgba(255,255,255,0.35);">© 2026 Avrrora. Усі права захищено.</p>
+</footer>
+<script>
+(function () {
+  // --- Before / after slider ---
+  var ba = document.getElementById('ba');
+  var clip = document.getElementById('ba-clip');
+  var divider = document.getElementById('ba-divider');
+  var dragging = false;
+  function baPos(e) {
+    var r = ba.getBoundingClientRect();
+    return Math.max(4, Math.min(96, ((e.clientX - r.left) / r.width) * 100));
+  }
+  function baSet(p) {
+    clip.style.clipPath = 'inset(0 ' + (100 - p) + '% 0 0)';
+    divider.style.left = p + '%';
+  }
+  ba.addEventListener('pointerdown', function (e) { ba.setPointerCapture(e.pointerId); dragging = true; baSet(baPos(e)); });
+  ba.addEventListener('pointermove', function (e) { if (dragging) baSet(baPos(e)); });
+  ba.addEventListener('pointerup', function () { dragging = false; });
+  ba.addEventListener('pointercancel', function () { dragging = false; });
+
+  // --- Gallery filter + lightbox ---
+  var cats = [['all', 'Усі'], ['blond', 'Блонд і колір'], ['cut', 'Стрижки'], ['updo', 'Зачіски'], ['makeup', 'Макіяж']];
+  var items = [
+    { src: 'images/before-after.jpg', cap: 'До / після · рожевий блонд', cat: 'blond' },
+    { src: 'images/haircut.jpg', cap: 'Стрижка шарами + контуринг', cat: 'cut' },
+    { src: 'images/makeup.jpg', cap: 'Вечірній макіяж', cat: 'makeup' },
+    { src: 'images/blonde-back.jpg', cap: 'Перлинний блонд', cat: 'blond' },
+    { src: 'images/waves.jpg', cap: 'Попелястий балаяж', cat: 'blond' },
+    { src: 'images/updo.jpg', cap: 'Зачіска · низький пучок', cat: 'updo' },
+    { src: 'images/bride.jpg', cap: 'Весільний образ', cat: 'makeup' },
+    { src: 'images/color-warm.jpg', cap: 'Карамельний колір', cat: 'blond' },
+    { src: 'images/updo-curls.jpg', cap: 'Вечірня зачіска', cat: 'updo' },
+    { src: 'images/blonde-back-2.jpg', cap: 'Бежевий блонд', cat: 'blond' },
+    { src: 'images/collage.jpg', cap: 'Блонд — наша спеціалізація', cat: 'blond' },
+    { src: 'images/salon.jpg', cap: 'Атмосфера салону', cat: 'cut' }
+  ];
+  var filter = 'all';
+  var fEl = document.getElementById('works-filters');
+  var gEl = document.getElementById('works-grid');
+  function filterStyle(active) {
+    return 'padding:10px 22px;border-radius:100px;border:1px solid ' + (active ? 'transparent' : 'rgba(11,11,22,0.12)') +
+      ';background:' + (active ? 'linear-gradient(120deg,#2f4fd8,#7a3ff2)' : '#fff') +
+      ';color:' + (active ? '#fff' : '#3c3c50') + ";font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .3s;";
+  }
+  function renderFilters() {
+    fEl.innerHTML = '';
+    cats.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.textContent = c[1];
+      b.setAttribute('style', filterStyle(filter === c[0]));
+      b.addEventListener('click', function () { filter = c[0]; renderFilters(); renderGrid(); });
+      fEl.appendChild(b);
+    });
+  }
+  function renderGrid() {
+    gEl.innerHTML = '';
+    items.filter(function (w) { return filter === 'all' || w.cat === filter; }).forEach(function (w) {
+      var fig = document.createElement('figure');
+      fig.setAttribute('style', 'margin:0;position:relative;border-radius:20px;overflow:hidden;cursor:zoom-in;animation:fadeIn .5s ease both;');
+      var img = document.createElement('img'); img.src = w.src; img.alt = w.cap;
+      img.setAttribute('style', 'width:100%;aspect-ratio:4/5;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.22,.61,.21,1);');
+      var cap = document.createElement('figcaption'); cap.textContent = w.cap;
+      cap.setAttribute('style', 'position:absolute;left:14px;bottom:14px;padding:7px 14px;border-radius:100px;background:rgba(11,11,22,0.55);backdrop-filter:blur(10px);color:#fff;font-size:13px;font-weight:600;');
+      fig.appendChild(img); fig.appendChild(cap);
+      fig.addEventListener('click', function () { openLightbox(w); });
+      gEl.appendChild(fig);
+    });
+  }
+
+  var lb = document.getElementById('lightbox');
+  var lbImg = document.getElementById('lightbox-img');
+  var lbCap = document.getElementById('lightbox-cap');
+  function openLightbox(w) {
+    lbImg.src = w.src; lbImg.alt = w.cap; lbCap.textContent = w.cap;
+    lb.style.display = 'flex'; lb.style.animation = 'fadeIn .3s ease';
+  }
+  function closeLightbox() { lb.style.display = 'none'; }
+  lb.addEventListener('click', closeLightbox);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
+
+  renderFilters();
+  renderGrid();
+})();
+</script>
+<script src="assets/site.js"></script>
+</body>
+</html>

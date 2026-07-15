@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сторінку не знайдено — Avrrora</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#0b0b16;color:#fff;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
+a{color:#b7a3ff;text-decoration:none;transition:color .3s;} a:hover{color:#fff;}
+@keyframes glow{0%,100%{opacity:.5;transform:scale(1);}50%{opacity:.85;transform:scale(1.08);}}
+@keyframes in{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:none;}}
+</style>
+</head>
+<body>
+<div style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;overflow:hidden;padding:24px;text-align:center;">
+  <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:720px;height:720px;border-radius:50%;background:radial-gradient(circle, rgba(122,63,242,0.35), rgba(47,79,216,0.18) 45%, transparent 70%);animation:glow 7s ease-in-out infinite;"></div>
+  <div style="position:relative;animation:in 1s cubic-bezier(.22,.61,.21,1) both;">
+    <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:700;font-size:clamp(100px,20vw,220px);line-height:1;background:linear-gradient(120deg,#8fa4ff,#b7a3ff 60%,#7a3ff2);-webkit-background-clip:text;background-clip:text;color:transparent;">404</p>
+    <p style="margin:18px 0 0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(18px,2.4vw,26px);">Схоже, ця сторінка пішла на фарбування</p>
+    <p style="margin:14px 0 0;font-size:16px;line-height:1.7;color:rgba(255,255,255,0.65);max-width:440px;">І повернеться нескоро. А от ви можете повернутися на головну — там усе на місці.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px;">
+      <a href="index.html" style="display:inline-block;padding:15px 30px;border-radius:100px;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-weight:700;font-size:15px;box-shadow:0 12px 34px rgba(122,63,242,0.4);transition:transform .35s;" style-hover="color:#fff;transform:translateY(-3px);">На головну</a>
+      <a href="works.html" style="display:inline-block;padding:15px 30px;border-radius:100px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.3);color:#fff;font-weight:700;font-size:15px;transition:background .35s;" style-hover="color:#fff;background:rgba(255,255,255,0.2);">Наші роботи</a>
+    </div>
+  </div>
+</div>
+<script src="assets/site.js"></script>
+</body>
+</html>

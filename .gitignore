@@ -2,10 +2,7 @@
 .DS_Store
 Thumbs.db
 
-# Prototype runtime (not for production)
-support.js
-
-# Dependencies / build (for future framework work)
+# Dependencies / build (if a framework is added later)
 node_modules/
 dist/
 .next/
