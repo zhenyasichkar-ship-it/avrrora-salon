@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth;}
+body{margin:0;background:#f7f7fb;color:#0b0b16;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
+a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff2;}
+</style>
+</helmet>
+<nav style="position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:26px;padding:11px 26px;border-radius:100px;background:rgba(255,255,255,0.7);backdrop-filter:blur(22px) saturate(1.7);-webkit-backdrop-filter:blur(22px) saturate(1.7);border:1px solid rgba(11,11,22,0.08);box-shadow:0 10px 34px rgba(11,11,22,0.1);white-space:nowrap;">
+  <a href="Головна.dc.html" style="font-family:'Unbounded',sans-serif;font-weight:600;font-size:15px;color:#0b0b16;letter-spacing:.04em;">Avrrora</a>
+  <div style="display:flex;gap:20px;font-size:14px;font-weight:600;">
+    <a href="Головна.dc.html" style="color:#3c3c50;">Головна</a>
+    <a href="Про нас.dc.html" style="color:#3c3c50;">Про нас</a>
+    <a href="Роботи.dc.html" style="color:#3c3c50;">Роботи</a>
+    <a href="Послуги.dc.html" style="color:#3c3c50;">Послуги</a>
+    <a href="FAQ.dc.html" style="color:#7a3ff2;">FAQ</a>
+    <a href="Контакти.dc.html" style="color:#3c3c50;">Контакти</a>
+  </div>
+</nav>
+<header style="width:min(1200px,92vw);margin:0 auto;padding:160px 0 50px;">
+  <p style="margin:0 0 14px;font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:#7a3ff2;">Питання та відповіді</p>
+  <h1 style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(34px,5vw,60px);line-height:1.12;letter-spacing:-0.01em;">FAQ</h1>
+  <p style="margin:20px 0 0;max-width:620px;font-size:18px;line-height:1.7;color:#5c5c72;text-wrap:pretty;">Найчастіші питання перед візитом. Не знайшли своє — телефонуйте або пишіть у Direct.</p>
+</header>
+<section style="width:min(860px,92vw);margin:0 auto;padding:20px 0 70px;display:flex;flex-direction:column;gap:14px;">
+  <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="8">
+    <div data-reveal="1" style="border-radius:20px;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 10px 30px rgba(11,11,22,0.05);overflow:hidden;">
+      <button onClick="{{ f.toggle }}" style="display:flex;justify-content:space-between;align-items:center;gap:18px;width:100%;padding:24px 28px;background:none;border:none;cursor:pointer;text-align:left;font-family:'Manrope',sans-serif;font-size:17px;font-weight:800;color:#0b0b16;">
+        <span>{{ f.q }}</span>
+        <span style="flex:none;width:30px;height:30px;border-radius:50%;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:600;transition:transform .4s cubic-bezier(.22,.61,.21,1);transform:{{ f.iconTransform }};">+</span>
+      </button>
+      <div style="display:grid;grid-template-rows:{{ f.rows }};transition:grid-template-rows .45s cubic-bezier(.22,.61,.21,1);">
+        <div style="overflow:hidden;">
+          <p style="margin:0;padding:0 28px 26px;font-size:15.5px;line-height:1.75;color:#5c5c72;text-wrap:pretty;">{{ f.a }}</p>
+        </div>
+      </div>
+    </div>
+  </sc-for>
+</section>
+<section style="width:min(1200px,92vw);margin:0 auto;padding:10px 0 100px;">
+  <p data-reveal="1" style="margin:0 0 14px;font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:#7a3ff2;">Догляд вдома</p>
+  <h2 data-reveal="1" style="margin:0 0 36px;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(26px,3.2vw,38px);">Щоб результат жив довше</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;">
+    <div data-reveal="1" style="padding:32px;border-radius:22px;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 10px 30px rgba(11,11,22,0.05);">
+      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;color:#2f4fd8;">Після блонду</p>
+      <p style="margin:12px 0 0;font-size:15px;line-height:1.7;color:#5c5c72;text-wrap:pretty;">Безсульфатний шампунь, відтіночна маска раз на тиждень і термозахист перед укладкою. Перші 48 годин — без миття.</p>
+    </div>
+    <div data-reveal="1" style="padding:32px;border-radius:22px;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 10px 30px rgba(11,11,22,0.05);">
+      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;color:#2f4fd8;">Після кератину</p>
+      <p style="margin:12px 0 0;font-size:15px;line-height:1.7;color:#5c5c72;text-wrap:pretty;">72 години без хвостиків, шпильок і миття. Далі — шампунь без сульфатів і мінімум солоної води: море «з'їдає» кератин.</p>
+    </div>
+    <div data-reveal="1" style="padding:32px;border-radius:22px;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 10px 30px rgba(11,11,22,0.05);">
+      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;color:#2f4fd8;">Щоденний догляд</p>
+      <p style="margin:12px 0 0;font-size:15px;line-height:1.7;color:#5c5c72;text-wrap:pretty;">Незмивний кондиціонер на кінчики, гребінець з рідкими зубцями на вологе волосся та підрівнювання раз на 2–3 місяці.</p>
+    </div>
+  </div>
+</section>
+<div style="position:fixed;right:20px;bottom:20px;z-index:110;display:flex;flex-direction:column;gap:12px;">
+  <a href="https://instagram.com/avrrorabeauty" title="Instagram" style="display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,0.88);backdrop-filter:blur(10px);border:1px solid rgba(11,11,22,0.1);color:#7a3ff2;font-family:'Unbounded',sans-serif;font-size:13px;font-weight:600;box-shadow:0 10px 26px rgba(11,11,22,0.18);transition:transform .3s;" style-hover="color:#7a3ff2;transform:translateY(-3px);">IG</a>
+  <a href="tel:+380987779898" title="Подзвонити" style="display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-size:24px;box-shadow:0 12px 30px rgba(122,63,242,0.45);transition:transform .3s;" style-hover="color:#fff;transform:translateY(-3px);">✆</a>
+</div>
+<footer style="background:#08080f;color:#fff;padding:70px 0 40px;">
+  <div style="width:min(1200px,92vw);margin:0 auto;display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;">
+    <div>
+      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:600;font-size:22px;">Avrrora</p>
+      <p style="margin:10px 0 0;font-size:14px;color:rgba(255,255,255,0.6);max-width:280px;line-height:1.6;">Салон краси у Києві. Вул. Січових Стрільців, 77 · щодня 9:00–20:00</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:15px;font-weight:600;">
+      <a href="Про нас.dc.html" style="color:rgba(255,255,255,0.8);">Про нас</a>
+      <a href="Роботи.dc.html" style="color:rgba(255,255,255,0.8);">Роботи</a>
+      <a href="Послуги.dc.html" style="color:rgba(255,255,255,0.8);">Послуги</a>
+      <a href="FAQ.dc.html" style="color:rgba(255,255,255,0.8);">FAQ</a>
+      <a href="Контакти.dc.html" style="color:rgba(255,255,255,0.8);">Контакти</a>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;font-size:15px;font-weight:600;">
+      <a href="tel:+380987779898" style="color:#fff;">098 777 98 98</a>
+      <a href="https://instagram.com/avrrorabeauty" style="color:#b7a3ff;">@avrrorabeauty</a>
+    </div>
+  </div>
+  <p style="width:min(1200px,92vw);margin:50px auto 0;font-size:12px;color:rgba(255,255,255,0.35);">© 2026 Avrrora. Усі права захищено.</p>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { open: 0 };
+  faqData = [
+    { q: 'Скільки триває тотал блонд?', a: 'Від 4 до 8 годин залежно від вихідного кольору та стану волосся. Якщо волосся було пофарбоване в темний, іноді потрібно 2 візити — чесно скажемо це на консультації.' },
+    { q: 'Як підготуватися до кератину?', a: 'Ніяк особливо — просто прийдіть з немитим 1–2 дні волоссям або помиємо в салоні. Головне: не плануйте після процедури спортзал чи басейн на найближчі 3 дні.' },
+    { q: 'Чи можна прийти з дитиною?', a: 'Так, у нас є зона очікування з диваном. А дітей до 10 років стрижемо самі — від 350 грн.' },
+    { q: 'Чи потрібна передоплата?', a: 'Для звичайних послуг — ні. Для весільних образів і виїздів беремо передоплату 30%, вона фіксує дату за вами.' },
+    { q: 'Що як мені не сподобається результат?', a: 'Скажіть одразу — корекцію протягом 7 днів робимо безкоштовно. Нам важливо, щоб ви повернулися, а не просто пішли.' },
+    { q: 'Ви працюєте з чоловіками?', a: 'Так — стрижки, догляд і фарбування. Ціни ті самі, дивіться розділ «Послуги».' },
+    { q: 'За скільки записуватися?', a: 'На будні зазвичай є вікна день у день. На суботу та вечірні години краще за 3–5 днів, на весільні дати — за місяць.' },
+    { q: 'Які засоби ви використовуєте?', a: 'Професійні лінії для фарбування та догляду. Конкретні марки підбираємо під стан волосся — на консультації покажемо і пояснимо чому саме це.' }
+  ];
+  renderVals() {
+    return {
+      faqs: this.faqData.map((f, i) => ({
+        q: f.q, a: f.a,
+        rows: this.state.open === i ? '1fr' : '0fr',
+        iconTransform: this.state.open === i ? 'rotate(45deg)' : 'rotate(0deg)',
+        toggle: () => this.setState(s => ({ open: s.open === i ? -1 : i }))
+      }))
+    };
+  }
+  componentDidMount() {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'none'; io.unobserve(e.target); }
+    }), { threshold: 0.12 });
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      if (el.getBoundingClientRect().top > window.innerHeight * 0.92) {
+        el.style.opacity = '0'; el.style.transform = 'translateY(26px)';
+        el.style.transition = 'opacity .9s cubic-bezier(.22,.61,.21,1), transform .9s cubic-bezier(.22,.61,.21,1)';
+        io.observe(el);
+      }
+    });
+  }
+}
+</script>
+</body>
+</html>
