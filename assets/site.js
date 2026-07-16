@@ -45,8 +45,9 @@
       '.avr-burger{display:none;align-items:center;justify-content:center;width:38px;height:38px;margin-left:auto;border:none;background:transparent;cursor:pointer;font-size:22px;line-height:1;color:#0b0b16;padding:0;}' +
       'html,body{overflow-x:hidden;}' +
       '@media (max-width:680px){' +
-        'nav.avr-nav{left:12px !important;right:12px !important;transform:none !important;width:auto !important;box-sizing:border-box;justify-content:space-between !important;gap:12px !important;border-radius:22px !important;}' +
-        'nav.avr-nav > div{display:none !important;position:absolute;top:calc(100% + 10px);left:0;right:0;flex-direction:column !important;align-items:flex-start;gap:16px !important;padding:18px 22px;border-radius:20px;background:rgba(255,255,255,0.97);-webkit-backdrop-filter:blur(22px) saturate(1.7);backdrop-filter:blur(22px) saturate(1.7);border:1px solid rgba(11,11,22,0.08);box-shadow:0 14px 40px rgba(11,11,22,0.16);font-size:16px !important;}' +
+        // Full-width top bar instead of the floating pill.
+        'nav.avr-nav{top:0 !important;left:0 !important;right:0 !important;transform:none !important;width:auto !important;box-sizing:border-box;justify-content:space-between !important;gap:12px !important;border-radius:0 !important;padding:15px 20px !important;background:rgba(255,255,255,0.94) !important;border:none !important;border-bottom:1px solid rgba(11,11,22,0.07) !important;box-shadow:0 6px 24px rgba(11,11,22,0.06) !important;}' +
+        'nav.avr-nav > div{display:none !important;position:absolute;top:100%;left:0;right:0;flex-direction:column !important;align-items:flex-start;gap:16px !important;padding:18px 22px;border-radius:0 0 20px 20px;background:rgba(255,255,255,0.97);-webkit-backdrop-filter:blur(22px) saturate(1.7);backdrop-filter:blur(22px) saturate(1.7);border:1px solid rgba(11,11,22,0.08);border-top:none;box-shadow:0 14px 40px rgba(11,11,22,0.16);font-size:16px !important;}' +
         'nav.avr-nav.avr-open > div{display:flex !important;}' +
         '.avr-burger{display:inline-flex;}' +
         // Services cards: collapse the image/text 2-column grid to a single column.

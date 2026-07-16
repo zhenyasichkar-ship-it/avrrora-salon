@@ -15,7 +15,8 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
 @keyframes marquee{to{transform:translateX(-50%);}}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 @media (max-width:900px), (max-aspect-ratio:4/5){
-  .avr-hero{min-height:0 !important;display:block !important;padding-top:86px !important;}
+  .avr-hero{min-height:0 !important;display:block !important;padding-top:78px !important;background:#f7f7fb !important;}
+  .avr-hero-media::before{content:'';position:absolute;left:0;right:0;top:0;height:52px;background:linear-gradient(180deg,#f7f7fb,rgba(247,247,251,0));z-index:2;pointer-events:none;}
   .avr-hero-media{position:relative !important;inset:auto !important;display:block;width:100%;aspect-ratio:2/1;}
   .avr-hero-video,.avr-hero-still{transform:none !important;}
   .avr-hero-fade{display:none !important;}
@@ -222,6 +223,6 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
   </div>
   <p style="width:min(1200px,92vw);margin:50px auto 0;font-size:12px;color:rgba(255,255,255,0.35);">© 2026 Avrrora. Усі права захищено.</p>
 </footer>
-<script src="assets/site.js?v=3"></script>
+<script src="assets/site.js?v=4"></script>
 </body>
 </html>
