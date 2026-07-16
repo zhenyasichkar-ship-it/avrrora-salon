@@ -50,8 +50,12 @@
         'nav.avr-nav.avr-open > div{display:flex !important;}' +
         '.avr-burger{display:inline-flex;}' +
         // Services cards: collapse the image/text 2-column grid to a single column.
-        '[style*="grid-template-columns:minmax(260px,2fr) 3fr"]{grid-template-columns:1fr !important;}' +
-        '[style*="padding:38px 42px"]{padding:26px 22px !important;}' +
+        // Match loosely — the reveal animation re-serializes the style attribute
+        // (adds spaces), so exact-substring selectors stop matching after scroll.
+        '[style*="minmax(260px"][style*="3fr"]{grid-template-columns:1fr !important;}' +
+        '[style*="38px 42px"]{padding:26px 22px !important;}' +
+        // Works: before/after description block has a huge right padding on desktop.
+        '[style*="10px 80px"]{padding:10px 6px !important;}' +
       '}';
     var style = document.createElement('style');
     style.id = 'avr-responsive';
