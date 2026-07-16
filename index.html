@@ -16,7 +16,7 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 @media (max-width:900px), (max-aspect-ratio:4/5){
   .avr-hero{min-height:0 !important;display:block !important;padding-top:86px !important;}
-  .avr-hero-video{position:relative !important;inset:auto !important;display:block;width:100% !important;height:auto !important;object-fit:contain !important;}
+  .avr-hero-media{position:relative !important;inset:auto !important;display:block;width:100%;aspect-ratio:2/1;}
   .avr-hero-fade{display:none !important;}
   .avr-hero-content{padding:26px 0 44px !important;}
 }
@@ -35,9 +35,12 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
   </div>
 </nav>
 <header class="avr-hero" style="position:relative;min-height:100vh;display:flex;align-items:flex-end;overflow:hidden;background:#e9eaee;">
-  <video class="avr-hero-video" autoplay muted loop playsinline preload="auto" poster="images/hero-poster.jpg" aria-label="Анімований логотип салону Avrrora" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;">
-    <source src="images/hero.mp4" type="video/mp4"/>
-  </video>
+  <div class="avr-hero-media" style="position:absolute;inset:0;">
+    <img src="images/hero-still.jpg" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;"/>
+    <video class="avr-hero-video" autoplay muted playsinline preload="auto" poster="images/hero-2-poster.jpg" aria-label="Анімований логотип салону Avrrora" onended="this.style.opacity='0'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;transition:opacity .9s ease;">
+      <source src="images/hero-2.mp4" type="video/mp4"/>
+    </video>
+  </div>
   <div class="avr-hero-fade" style="position:absolute;inset:0;background:linear-gradient(180deg, rgba(233,234,238,0) 58%, rgba(233,234,238,0.55) 84%, rgba(233,234,238,0.85) 100%);"></div>
   <div class="avr-hero-content" style="position:relative;width:min(1200px,92vw);margin:0 auto;padding:0 0 7vh;color:#0b0b16;animation:heroIn 1.1s cubic-bezier(.22,.61,.21,1) both;">
     <h1 style="position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;">Avrrora — салон краси у Києві</h1>
