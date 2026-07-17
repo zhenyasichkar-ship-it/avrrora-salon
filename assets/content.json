@@ -131,6 +131,16 @@
             "price": "від 1 600 грн"
           }
         ]
+      },
+      {
+        "title": "Нова категорія",
+        "image": "images/uploads/nova-katehoriia-mrpc5jsh.jpg",
+        "items": [
+          {
+            "name": "фистинг",
+            "price": "від 2"
+          }
+        ]
       }
     ]
   },
