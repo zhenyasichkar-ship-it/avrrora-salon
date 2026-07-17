@@ -180,13 +180,13 @@ textarea{resize:vertical;min-height:70px;}
 
   // Compress an uploaded image on-device, register it for publishing,
   // return its future repo path.
-  function processUpload(file, nameHint) {
+  function processUpload(file, nameHint, maxPx) {
     return new Promise(function (resolve, reject) {
       var img = new Image();
       var url = URL.createObjectURL(file);
       img.onload = function () {
         URL.revokeObjectURL(url);
-        var MAX = 1600;
+        var MAX = maxPx || 1600;
         var scale = Math.min(1, MAX / Math.max(img.width, img.height));
         var c = document.createElement('canvas');
         c.width = Math.round(img.width * scale);
@@ -205,11 +205,11 @@ textarea{resize:vertical;min-height:70px;}
   function imgSrc(path) {
     return pendingImages[path] ? 'data:image/jpeg;base64,' + pendingImages[path] : '/' + path;
   }
-  function uploadBtn(label, nameHint, onDone) {
+  function uploadBtn(label, nameHint, onDone, maxPx) {
     var inp = el('input', { type: 'file', accept: 'image/*', style: 'display:none;' });
     inp.addEventListener('change', function () {
       if (!inp.files[0]) return;
-      processUpload(inp.files[0], nameHint).then(function (path) { onDone(path); saveDraft(); });
+      processUpload(inp.files[0], nameHint, maxPx).then(function (path) { onDone(path); saveDraft(); });
     });
     var b = el('button', { class: 'btn-sm', type: 'button', text: label, onclick: function () { inp.click(); } });
     return el('span', {}, [b, inp]);
@@ -364,7 +364,14 @@ textarea{resize:vertical;min-height:70px;}
     host.appendChild(dirs);
     host.appendChild(el('div', { class: 'card' }, [
       el('h3', { style: 'margin:0 0 14px;font-size:17px;', text: 'Головна сторінка' }),
-      field('Слоган під відео', content.hero.tagline, function (v) { content.hero.tagline = v; }, true)
+      el('div', { class: 'row row-wrap', style: 'margin-bottom:14px;' }, [
+        el('img', { class: 'thumb', src: imgSrc(content.hero.image), alt: '', style: 'width:120px;height:74px;' }),
+        el('div', {}, [
+          el('p', { class: 'muted', style: 'margin:0 0 6px;', text: 'Головне фото (краще горизонтальне, від 1920px завширшки)' }),
+          uploadBtn('Замінити фото', 'hero', function (p) { content.hero.image = p; renderTexts(); }, 2400)
+        ])
+      ]),
+      field('Слоган на головній', content.hero.tagline, function (v) { content.hero.tagline = v; }, true)
     ]));
   }
 

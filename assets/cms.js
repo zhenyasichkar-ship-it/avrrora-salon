@@ -96,6 +96,8 @@
   // Elements that opt in via id get their content from JSON.
   function hydrateIds(c) {
     setText('cms-hero-tagline', c.hero && c.hero.tagline);
+    var heroImg = document.getElementById('cms-hero-photo');
+    if (heroImg && c.hero && c.hero.image) heroImg.src = c.hero.image;
     setText('cms-services-intro', c.services && c.services.intro);
     var ct = c.contacts || {};
     setText('cms-contacts-blurb', ct.headerBlurb);
