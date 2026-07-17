@@ -9,6 +9,7 @@
 <script src="assets/cms.js?v=1"></script>
 <style>
 html{scroll-behavior:smooth;}
+#booking-form select option{background:#15151f;color:#fff;}
 body{margin:0;background:#f7f7fb;color:#0b0b16;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
 a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff2;}
 </style>
@@ -66,7 +67,7 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
       <p style="grid-column:1/-1;margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;">Запишіться на консультацію онлайн — оберіть зручний час</p>
       <input name="name" placeholder="Ваше ім'я" required maxlength="100" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"/>
       <input name="phone" placeholder="Телефон" required maxlength="30" inputmode="tel" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"/>
-      <select name="service" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"><option value="">Послуга (не обов'язково)</option></select>
+      <select name="service" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;color-scheme:dark;"><option value="">Послуга (не обов'язково)</option></select>
       <input name="date" type="date" required style="padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;color-scheme:dark;"/>
       <div id="booking-slots" style="grid-column:1/-1;display:none;flex-wrap:wrap;gap:8px;"></div>
       <input name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true"/>
