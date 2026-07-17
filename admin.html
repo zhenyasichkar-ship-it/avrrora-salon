@@ -62,14 +62,16 @@ textarea{resize:vertical;min-height:70px;}
   <div id="publish-status" style="display:none;margin:0 0 20px;padding:16px 20px;border-radius:14px;font-weight:600;font-size:14.5px;"></div>
 
   <div class="row row-wrap" style="gap:8px;margin-bottom:26px;">
-    <button class="tab active" data-tab="services" type="button">Послуги та ціни</button>
+    <button class="tab active" data-tab="requests" type="button" id="tab-requests">Заявки</button>
+    <button class="tab" data-tab="services" type="button">Послуги та ціни</button>
     <button class="tab" data-tab="works" type="button">Роботи</button>
     <button class="tab" data-tab="faq" type="button">FAQ</button>
     <button class="tab" data-tab="texts" type="button">Тексти й контакти</button>
     <button class="tab" data-tab="calc" type="button">Калькулятор</button>
   </div>
 
-  <div id="pane-services" class="pane active"></div>
+  <div id="pane-requests" class="pane active"></div>
+  <div id="pane-services" class="pane"></div>
   <div id="pane-works" class="pane"></div>
   <div id="pane-faq" class="pane"></div>
   <div id="pane-texts" class="pane"></div>
@@ -216,7 +218,89 @@ textarea{resize:vertical;min-height:70px;}
   }
 
   // ---------- panes ----------
-  function renderAll() { renderServices(); renderWorks(); renderFaq(); renderTexts(); renderCalc(); }
+  function renderAll() { renderServices(); renderWorks(); renderFaq(); renderTexts(); renderCalc(); loadRequests(); }
+
+  // ----- Заявки (bookings from the calendar form) -----
+  var reqScope = 'active';
+  var STATUS_LABELS = { new: 'Нова', contacted: "Зв'язались", done: 'Готово', cancelled: 'Скасовано' };
+  var STATUS_COLORS = { new: '#7a3ff2', contacted: '#2f4fd8', done: '#0a7a44', cancelled: '#999' };
+
+  function loadRequests() {
+    var host = document.getElementById('pane-requests');
+    host.innerHTML = '<div class="card"><p class="muted" style="margin:0;">Завантажуємо заявки…</p></div>';
+    fetch('/api/requests?scope=' + reqScope, { headers: { Authorization: 'Bearer ' + token() } })
+      .then(function (r) {
+        return r.json().catch(function () { throw new Error('Сервер заявок недоступний'); })
+          .then(function (d) { return { ok: r.ok, d: d }; });
+      })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.d.error || 'Помилка завантаження');
+        renderRequests(res.d.bookings);
+      })
+      .catch(function (e) {
+        host.innerHTML = '';
+        host.appendChild(el('div', { class: 'card' }, [
+          el('p', { style: 'margin:0;color:#c22;font-weight:600;', text: String(e.message || e) }),
+          el('p', { class: 'muted', style: 'margin:10px 0 0;', text: 'Якщо база ще не підключена: Vercel → вкладка Storage → Create Database → Neon (Postgres) → підключити до проєкту й зробити Redeploy. Деталі — в ADMIN.md.' }),
+          el('div', { style: 'margin-top:14px;' }, [
+            el('button', { class: 'btn-sm', type: 'button', text: '↻ Спробувати ще раз', onclick: loadRequests })
+          ])
+        ]));
+      });
+  }
+
+  function renderRequests(items) {
+    var host = document.getElementById('pane-requests');
+    host.innerHTML = '';
+    var newCount = items.filter(function (b) { return b.status === 'new'; }).length;
+    document.getElementById('tab-requests').textContent = newCount ? 'Заявки (' + newCount + ')' : 'Заявки';
+
+    host.appendChild(el('div', { class: 'row', style: 'gap:8px;margin-bottom:16px;' }, [
+      el('button', { class: 'btn-sm', type: 'button', text: reqScope === 'active' ? '☑ Актуальні' : 'Актуальні', onclick: function () { reqScope = 'active'; loadRequests(); } }),
+      el('button', { class: 'btn-sm', type: 'button', text: reqScope === 'all' ? '☑ Всі' : 'Всі', onclick: function () { reqScope = 'all'; loadRequests(); } }),
+      el('button', { class: 'btn-sm', type: 'button', text: '↻ Оновити', onclick: loadRequests })
+    ]));
+
+    if (!items.length) {
+      host.appendChild(el('div', { class: 'card' }, [el('p', { class: 'muted', style: 'margin:0;', text: reqScope === 'active' ? 'Актуальних заявок немає.' : 'Заявок поки немає.' })]));
+      return;
+    }
+
+    items.forEach(function (b) {
+      var sel = el('select', { style: 'width:150px;flex:none;border-color:' + (STATUS_COLORS[b.status] || '#ccc') + ';' });
+      Object.keys(STATUS_LABELS).forEach(function (s) {
+        var o = el('option', { value: s, text: STATUS_LABELS[s] });
+        if (s === b.status) o.selected = true;
+        sel.appendChild(o);
+      });
+      sel.addEventListener('change', function () {
+        sel.disabled = true;
+        fetch('/api/requests', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token() },
+          body: JSON.stringify({ id: b.id, status: sel.value })
+        }).then(function (r) {
+          sel.disabled = false;
+          if (r.ok) { b.status = sel.value; loadRequests(); }
+          else alert('Не вдалося оновити статус');
+        }).catch(function () { sel.disabled = false; alert('Сервер недоступний'); });
+      });
+
+      var when = b.date.split('-').reverse().join('.') + ' о ' + b.time;
+      host.appendChild(el('div', { class: 'card', style: 'margin-bottom:10px;padding:18px 22px;' }, [
+        el('div', { class: 'row row-wrap', style: 'justify-content:space-between;' }, [
+          el('div', {}, [
+            el('p', { style: 'margin:0;font-weight:800;font-size:16px;', text: when + ' · ' + b.name }),
+            el('p', { class: 'muted', style: 'margin:6px 0 0;' }, [
+              el('a', { href: 'tel:' + b.phone.replace(/[^+\d]/g, ''), style: 'font-weight:700;', text: b.phone }),
+              el('span', { text: b.service ? ' · ' + b.service : '' })
+            ])
+          ]),
+          sel
+        ])
+      ]));
+    });
+  }
 
   function renderServices() {
     var host = document.getElementById('pane-services');
