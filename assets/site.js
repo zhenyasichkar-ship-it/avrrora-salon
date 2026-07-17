@@ -100,6 +100,21 @@
     });
   }
 
+  // Floating "Записатися" pill above the IG/phone stack on every page.
+  function addBookingPill() {
+    if (document.getElementById('avr-book-pill')) return;
+    var stack = document.querySelector('div[style*="position:fixed"][style*="right:20px"][style*="bottom:20px"]');
+    if (!stack) return;
+    var a = document.createElement('a');
+    a.id = 'avr-book-pill';
+    a.href = document.getElementById('booking') ? '#booking' : 'contacts.html#booking';
+    a.setAttribute('style', 'display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:100px;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-family:\'Manrope\',sans-serif;font-weight:700;font-size:15px;box-shadow:0 12px 30px rgba(122,63,242,0.45);transition:transform .3s;white-space:nowrap;');
+    a.setAttribute('style-hover', 'color:#fff;transform:translateY(-3px);');
+    a.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Записатися</span>';
+    stack.insertBefore(a, stack.firstChild);
+    bindHover(stack);
+  }
+
   // Exposed so page scripts can re-bind after rendering dynamic content.
   window.Avrrora = {
     bindHover: bindHover,
@@ -110,6 +125,7 @@
   function init() {
     injectStyles();
     setupMobileNav();
+    addBookingPill();
     bindHover(document);
     bindReveal(document);
   }

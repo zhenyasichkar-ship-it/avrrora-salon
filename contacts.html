@@ -63,16 +63,21 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
         <a href="https://instagram.com/avrrorabeauty" style="display:inline-block;padding:15px 30px;border-radius:100px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.35);color:#fff;font-weight:700;font-size:15px;transition:background .35s;" style-hover="color:#fff;background:rgba(255,255,255,0.24);">@avrrorabeauty</a>
       </div>
     </div>
-    <form id="booking-form" style="position:relative;margin-top:34px;padding-top:30px;border-top:1px solid rgba(255,255,255,0.12);display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;align-items:start;">
-      <p style="grid-column:1/-1;margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;">Запишіться на консультацію онлайн — оберіть зручний час</p>
-      <input name="name" placeholder="Ваше ім'я" required maxlength="100" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"/>
-      <input name="phone" placeholder="Телефон" required maxlength="30" inputmode="tel" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"/>
-      <select name="service" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;color-scheme:dark;"><option value="">Послуга (не обов'язково)</option></select>
-      <input name="date" type="date" required style="padding:12px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;color-scheme:dark;"/>
-      <div id="booking-slots" style="grid-column:1/-1;display:none;flex-wrap:wrap;gap:8px;"></div>
+    <form id="booking-form" style="position:relative;margin-top:34px;padding-top:30px;border-top:1px solid rgba(255,255,255,0.12);display:flex;flex-direction:column;gap:14px;">
+      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;">Запишіться на консультацію онлайн</p>
+      <p style="margin:8px 0 0;font-size:15px;font-weight:800;"><span style="color:#9d7bff;">1.</span> Оберіть день</p>
+      <div id="booking-days" style="display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;"></div>
+      <p style="margin:8px 0 0;font-size:15px;font-weight:800;"><span style="color:#9d7bff;">2.</span> Оберіть час</p>
+      <div id="booking-slots" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px;"></div>
+      <p style="margin:8px 0 0;font-size:15px;font-weight:800;"><span style="color:#9d7bff;">3.</span> Ваші контакти</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;align-items:center;">
+        <input name="name" placeholder="Ваше ім'я" required maxlength="100" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"/>
+        <input name="phone" placeholder="Телефон" required maxlength="30" inputmode="tel" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"/>
+        <select name="service" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;color-scheme:dark;"><option value="">Послуга (не обов'язково)</option></select>
+        <button type="submit" style="padding:14px 26px;border-radius:100px;border:none;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 12px 34px rgba(122,63,242,0.4);">Записатися</button>
+      </div>
       <input name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true"/>
-      <button type="submit" style="padding:14px 26px;border-radius:100px;border:none;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 12px 34px rgba(122,63,242,0.4);">Записатися</button>
-      <p id="booking-status" style="grid-column:1/-1;margin:0;min-height:20px;font-size:14px;font-weight:600;"></p>
+      <p id="booking-status" style="margin:0;min-height:20px;font-size:14px;font-weight:600;"></p>
     </form>
   </div>
 </section>
@@ -111,31 +116,73 @@ AvrroraContent.ready(function (content) {
   });
 
   var st = document.getElementById('booking-status');
-  var dateInput = form.querySelector('input[name="date"]');
+  var daysBox = document.getElementById('booking-days');
   var slotsBox = document.getElementById('booking-slots');
+  var chosenDate = null;
   var chosenTime = null;
 
-  function fmt(d) { return d.toISOString().slice(0, 10); }
-  var today = new Date();
-  var max = new Date(Date.now() + 60 * 24 * 3600 * 1000);
-  dateInput.min = fmt(today);
-  dateInput.max = fmt(max);
+  // Next 14 days, weekdays only.
+  var WD = ['НД', 'ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
+  var MO = ['січ', 'лют', 'бер', 'кві', 'тра', 'чер', 'лип', 'сер', 'вер', 'жов', 'лис', 'гру'];
+  function fmtLocal(d) {
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+  var days = [];
+  for (var i = 0; i < 14; i++) {
+    var d = new Date();
+    d.setDate(d.getDate() + i);
+    if (d.getDay() === 0 || d.getDay() === 6) continue;
+    days.push({ value: fmtLocal(d), wd: WD[d.getDay()], label: d.getDate() + ' ' + MO[d.getMonth()] });
+  }
+
+  function dayStyle(active) {
+    return "flex:none;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 16px;border-radius:14px;font-family:'Manrope',sans-serif;cursor:pointer;transition:all .25s;border:1px solid " +
+      (active ? 'transparent;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;'
+              : 'rgba(255,255,255,0.2);background:rgba(255,255,255,0.07);color:#fff;');
+  }
+
+  function renderDays() {
+    daysBox.innerHTML = '';
+    days.forEach(function (day) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('style', dayStyle(chosenDate === day.value));
+      var wd = document.createElement('span');
+      wd.textContent = day.wd;
+      wd.setAttribute('style', 'font-size:11px;font-weight:800;letter-spacing:.14em;opacity:' + (chosenDate === day.value ? '0.85' : '0.55') + ';');
+      var lb = document.createElement('span');
+      lb.textContent = day.label;
+      lb.setAttribute('style', 'font-size:15px;font-weight:700;white-space:nowrap;');
+      b.appendChild(wd); b.appendChild(lb);
+      b.addEventListener('click', function () { pickDay(day.value); });
+      daysBox.appendChild(b);
+    });
+  }
 
   function slotStyle(state) { // free | taken | active
-    var base = "padding:10px 16px;border-radius:12px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s;border:1px solid ";
+    var base = "padding:11px 6px;border-radius:12px;font-family:'Manrope',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .25s;text-align:center;border:1px solid ";
     if (state === 'active') return base + 'transparent;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;';
     if (state === 'taken') return base + 'rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.25);cursor:not-allowed;text-decoration:line-through;';
     return base + 'rgba(255,255,255,0.2);background:rgba(255,255,255,0.07);color:#fff;';
   }
 
+  function slotsMessage(text, color) {
+    slotsBox.innerHTML = '';
+    var s = document.createElement('span');
+    s.textContent = text;
+    s.setAttribute('style', 'grid-column:1/-1;color:' + color + ';font-size:14px;');
+    slotsBox.appendChild(s);
+  }
+
   function renderSlots(slots, taken) {
     slotsBox.innerHTML = '';
-    slotsBox.style.display = 'flex';
+    var free = 0;
     slots.forEach(function (t) {
       var b = document.createElement('button');
       b.type = 'button';
       b.textContent = t;
       var isTaken = taken.indexOf(t) !== -1;
+      if (!isTaken) free++;
       b.setAttribute('style', slotStyle(isTaken ? 'taken' : (chosenTime === t ? 'active' : 'free')));
       if (!isTaken) {
         b.addEventListener('click', function () {
@@ -147,32 +194,39 @@ AvrroraContent.ready(function (content) {
       }
       slotsBox.appendChild(b);
     });
+    if (!free) slotsMessage('На цей день вільних місць немає — оберіть інший.', 'rgba(255,255,255,0.6)');
   }
 
-  dateInput.addEventListener('change', function () {
+  function pickDay(value) {
+    chosenDate = value;
     chosenTime = null;
-    if (!dateInput.value) { slotsBox.style.display = 'none'; return; }
-    slotsBox.innerHTML = '<span style="color:rgba(255,255,255,0.6);font-size:14px;">Завантажуємо вільний час…</span>';
-    slotsBox.style.display = 'flex';
-    fetch('/api/slots?date=' + encodeURIComponent(dateInput.value))
+    renderDays();
+    slotsMessage('Завантажуємо вільний час…', 'rgba(255,255,255,0.6)');
+    fetch('/api/slots?date=' + encodeURIComponent(value))
       .then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (res) {
         if (!res.ok) throw new Error(res.d.error || 'error');
+        if (chosenDate !== value) return; // user already switched day
         renderSlots(res.d.slots, res.d.taken);
       })
       .catch(function () {
-        slotsBox.innerHTML = '<span style="color:#ff9c9c;font-size:14px;">Не вдалося завантажити вільний час — спробуйте пізніше або зателефонуйте.</span>';
+        if (chosenDate !== value) return;
+        slotsMessage('Не вдалося завантажити вільний час — спробуйте пізніше або зателефонуйте.', '#ff9c9c');
       });
-  });
+  }
+
+  renderDays();
+  if (days.length) pickDay(days[0].value);
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (!chosenTime) {
+    if (!chosenDate || !chosenTime) {
       st.style.color = '#ff9c9c';
-      st.textContent = 'Оберіть, будь ласка, час візиту.';
+      st.textContent = 'Оберіть, будь ласка, день і час візиту.';
       return;
     }
     var btn = form.querySelector('button[type="submit"]');
+    var bookedDate = chosenDate, bookedTime = chosenTime;
     btn.disabled = true;
     st.style.color = 'rgba(255,255,255,0.8)';
     st.textContent = 'Записуємо…';
@@ -181,21 +235,20 @@ AvrroraContent.ready(function (content) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         name: form.name.value, phone: form.phone.value, service: sel.value,
-        date: dateInput.value, time: chosenTime, website: form.website.value
+        date: bookedDate, time: bookedTime, website: form.website.value
       })
     }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
       .then(function (res) {
         btn.disabled = false;
         if (res.ok) {
           st.style.color = '#7ee2a8';
-          st.textContent = 'Готово! Чекаємо на вас ' + dateInput.value.split('-').reverse().join('.') + ' о ' + chosenTime + '. Якщо плани зміняться — просто зателефонуйте.';
+          st.textContent = 'Готово! Чекаємо на вас ' + bookedDate.split('-').reverse().join('.') + ' о ' + bookedTime + '. Якщо плани зміняться — просто зателефонуйте.';
           form.reset();
-          chosenTime = null;
-          slotsBox.style.display = 'none';
+          pickDay(bookedDate); // refresh slots; the booked one is now taken
         } else {
           st.style.color = '#ff9c9c';
           st.textContent = res.d.error || 'Щось пішло не так — зателефонуйте нам, будь ласка.';
-          if (dateInput.value) dateInput.dispatchEvent(new Event('change')); // refresh slots
+          pickDay(bookedDate);
         }
       })
       .catch(function () {
@@ -206,6 +259,6 @@ AvrroraContent.ready(function (content) {
   });
 });
 </script>
-<script src="assets/site.js?v=4"></script>
+<script src="assets/site.js?v=5"></script>
 </body>
 </html>

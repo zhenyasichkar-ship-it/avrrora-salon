@@ -1,7 +1,7 @@
 // POST /api/booking { name, phone, service, date, time, website }
 // Stores the booking in Postgres (one active booking per slot) and pings
 // Telegram if a bot is configured. "website" is a honeypot field.
-const { db, ensure, SLOTS } = require('./_lib.js');
+const { db, ensure, SLOTS, BOOKING_DAYS } = require('./_lib.js');
 
 async function notifyTelegram(text) {
   const bot = process.env.TELEGRAM_BOT_TOKEN;
@@ -36,8 +36,12 @@ module.exports = async (req, res) => {
   }
   const day = new Date(date + 'T12:00:00Z');
   const today = new Date(); today.setUTCHours(0, 0, 0, 0);
-  if (isNaN(day) || day < today || day - today > 60 * 24 * 3600 * 1000) {
-    return res.status(400).json({ error: 'Дата має бути в межах найближчих 60 днів' });
+  if (isNaN(day) || day < today || day - today > BOOKING_DAYS * 24 * 3600 * 1000) {
+    return res.status(400).json({ error: 'Запис можливий лише на найближчі ' + BOOKING_DAYS + ' днів' });
+  }
+  const weekday = day.getUTCDay();
+  if (weekday === 0 || weekday === 6) {
+    return res.status(400).json({ error: 'Онлайн-запис працює у будні (пн–пт)' });
   }
 
   const sql = db();

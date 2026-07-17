@@ -3,8 +3,13 @@
 // DATABASE_URL / POSTGRES_URL automatically.
 const { neon } = require('@neondatabase/serverless');
 
-// Hourly consultation slots within salon hours.
-const SLOTS = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
+// Consultations: Mon-Fri, half-hour slots from 10:00, last one at 18:30.
+const SLOTS = [];
+for (let h = 10; h < 19; h++) {
+  SLOTS.push(String(h).padStart(2, '0') + ':00');
+  SLOTS.push(String(h).padStart(2, '0') + ':30');
+}
+const BOOKING_DAYS = 14; // how far ahead clients can book
 const STATUSES = ['new', 'contacted', 'done', 'cancelled'];
 
 let sql = null;
@@ -38,4 +43,4 @@ function ensure(s) {
   return ready;
 }
 
-module.exports = { db, ensure, SLOTS, STATUSES };
+module.exports = { db, ensure, SLOTS, STATUSES, BOOKING_DAYS };
