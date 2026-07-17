@@ -6,6 +6,7 @@
 <title>Послуги та ціни — Avrrora</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/cms.js?v=1"></script>
 <style>
 html{scroll-behavior:smooth;}
 body{margin:0;background:#f7f7fb;color:#0b0b16;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
@@ -27,67 +28,10 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
 <header style="width:min(1200px,92vw);margin:0 auto;padding:160px 0 50px;">
   <p style="margin:0 0 14px;font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:#7a3ff2;">Що ми робимо</p>
   <h1 style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(34px,5vw,60px);line-height:1.12;letter-spacing:-0.01em;">Послуги та ціни</h1>
-  <p style="margin:20px 0 0;max-width:620px;font-size:18px;line-height:1.7;color:#5c5c72;text-wrap:pretty;">Ціни вказано «від» — точну вартість майстер озвучує після діагностики довжини та густоти волосся, до початку роботи.</p>
+  <p id="cms-services-intro" style="margin:20px 0 0;max-width:620px;font-size:18px;line-height:1.7;color:#5c5c72;text-wrap:pretty;">Ціни вказано «від» — точну вартість майстер озвучує після діагностики довжини та густоти волосся, до початку роботи.</p>
 </header>
 <section style="width:min(1200px,92vw);margin:0 auto;padding:20px 0 100px;display:flex;flex-direction:column;gap:26px;">
-  <div data-reveal="1" style="display:grid;grid-template-columns:minmax(260px,2fr) 3fr;gap:0;border-radius:26px;overflow:hidden;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 14px 40px rgba(11,11,22,0.07);">
-    <img src="images/haircut.jpg" alt="Стрижки" style="width:100%;height:100%;min-height:280px;object-fit:cover;"/>
-    <div style="padding:38px 42px;">
-      <h2 style="margin:0 0 22px;font-family:'Unbounded',sans-serif;font-weight:500;font-size:24px;">Стрижки</h2>
-      <div style="display:flex;flex-direction:column;gap:14px;font-size:16px;">
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Жіноча стрижка + укладка</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 650 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Стрижка гарячими ножицями</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 900 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Підрівнювання кінчиків</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 400 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;"><span>Дитяча стрижка (до 10 років)</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 350 грн</span></div>
-      </div>
-    </div>
-  </div>
-  <div data-reveal="1" style="display:grid;grid-template-columns:minmax(260px,2fr) 3fr;gap:0;border-radius:26px;overflow:hidden;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 14px 40px rgba(11,11,22,0.07);">
-    <img src="images/ba-color-after.png" alt="Фарбування" style="width:100%;height:100%;min-height:280px;object-fit:cover;"/>
-    <div style="padding:38px 42px;">
-      <h2 style="margin:0 0 22px;font-family:'Unbounded',sans-serif;font-weight:500;font-size:24px;">Фарбування</h2>
-      <div style="display:flex;flex-direction:column;gap:14px;font-size:16px;">
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Фарбування в один тон</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 1 200 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Тотал блонд</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 2 800 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Балаяж / AirTouch</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 3 500 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;"><span>Тонування</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 800 грн</span></div>
-      </div>
-    </div>
-  </div>
-  <div data-reveal="1" style="display:grid;grid-template-columns:minmax(260px,2fr) 3fr;gap:0;border-radius:26px;overflow:hidden;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 14px 40px rgba(11,11,22,0.07);">
-    <img src="images/ba-straight-after.png" alt="Догляд за волоссям" style="width:100%;height:100%;min-height:280px;object-fit:cover;"/>
-    <div style="padding:38px 42px;">
-      <h2 style="margin:0 0 22px;font-family:'Unbounded',sans-serif;font-weight:500;font-size:24px;">Догляд за волоссям</h2>
-      <div style="display:flex;flex-direction:column;gap:14px;font-size:16px;">
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Кератинове випрямлення</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 2 200 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Ботокс для волосся</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 1 800 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;"><span>SPA-відновлення</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 950 грн</span></div>
-      </div>
-    </div>
-  </div>
-  <div data-reveal="1" style="display:grid;grid-template-columns:minmax(260px,2fr) 3fr;gap:0;border-radius:26px;overflow:hidden;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 14px 40px rgba(11,11,22,0.07);">
-    <img src="images/updo-curls.jpg" alt="Укладки та зачіски" style="width:100%;height:100%;min-height:280px;object-fit:cover;"/>
-    <div style="padding:38px 42px;">
-      <h2 style="margin:0 0 22px;font-family:'Unbounded',sans-serif;font-weight:500;font-size:24px;">Укладки та зачіски</h2>
-      <div style="display:flex;flex-direction:column;gap:14px;font-size:16px;">
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Укладка брашингом</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 550 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Локони / голлівудська хвиля</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 750 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Вечірня зачіска</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 1 200 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;"><span>Весільна зачіска (з репетицією)</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 1 900 грн</span></div>
-      </div>
-    </div>
-  </div>
-  <div data-reveal="1" style="display:grid;grid-template-columns:minmax(260px,2fr) 3fr;gap:0;border-radius:26px;overflow:hidden;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 14px 40px rgba(11,11,22,0.07);">
-    <img src="images/makeup.jpg" alt="Макіяж" style="width:100%;height:100%;min-height:280px;object-fit:cover;"/>
-    <div style="padding:38px 42px;">
-      <h2 style="margin:0 0 22px;font-family:'Unbounded',sans-serif;font-weight:500;font-size:24px;">Макіяж</h2>
-      <div style="display:flex;flex-direction:column;gap:14px;font-size:16px;">
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Денний макіяж</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 900 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid rgba(11,11,22,0.07);padding-bottom:14px;"><span>Вечірній макіяж</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 1 100 грн</span></div>
-        <div style="display:flex;justify-content:space-between;gap:16px;"><span>Весільний макіяж (з репетицією)</span><span style="font-weight:700;color:#2f4fd8;white-space:nowrap;">від 1 600 грн</span></div>
-      </div>
-    </div>
-  </div>
+  <div id="svc-cards" style="display:contents;"></div>
   <div data-reveal="1" style="margin-top:24px;padding:44px;border-radius:26px;background:#0b0b16;color:#fff;position:relative;overflow:hidden;">
     <div style="position:absolute;right:-140px;bottom:-180px;width:480px;height:480px;border-radius:50%;background:radial-gradient(circle, rgba(47,79,216,0.4), transparent 65%);"></div>
     <div style="position:relative;">
@@ -143,16 +87,9 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
   <p style="width:min(1200px,92vw);margin:50px auto 0;font-size:12px;color:rgba(255,255,255,0.35);">© 2026 Avrrora. Усі права захищено.</p>
 </footer>
 <script>
-(function () {
-  var services = [
-    { label: 'Стрижка + укладка', base: [650, 750, 900] },
-    { label: 'Фарбування в один тон', base: [1200, 1600, 2100] },
-    { label: 'Тотал блонд', base: [2800, 3600, 4800] },
-    { label: 'Балаяж / AirTouch', base: [3500, 4300, 5500] },
-    { label: 'Кератин / ботокс', base: [1800, 2400, 3200] },
-    { label: 'Вечірня зачіска', base: [1200, 1400, 1700] }
-  ];
-  var lengths = ['Коротке (до плечей)', 'Середнє (до лопаток)', 'Довге (нижче лопаток)'];
+AvrroraContent.ready(function (content) {
+  var services = content.calculator.services;
+  var lengths = content.calculator.lengths;
   var svc = 0, len = 1;
   var elS = document.getElementById('calc-services');
   var elL = document.getElementById('calc-lengths');
@@ -179,7 +116,7 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
     elR.textContent = 'від ' + price.toLocaleString('uk-UA') + ' грн';
   }
   render();
-})();
+});
 </script>
 <script src="assets/site.js?v=4"></script>
 </body>

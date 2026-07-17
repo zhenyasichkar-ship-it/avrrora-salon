@@ -6,6 +6,7 @@
 <title>Роботи — Avrrora</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/cms.js?v=1"></script>
 <style>
 html{scroll-behavior:smooth;}
 body{margin:0;background:#f7f7fb;color:#0b0b16;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
@@ -34,9 +35,9 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
   <p style="margin:0 0 16px;font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:#7a3ff2;">До / після</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;align-items:start;">
     <div id="ba" style="position:relative;border-radius:24px;overflow:hidden;box-shadow:0 14px 40px rgba(11,11,22,0.12);user-select:none;touch-action:none;aspect-ratio:3/4;">
-      <img src="images/ba-blonde-after.jpg" alt="Після — теплий блонд-балаяж" draggable="false" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;"/>
+      <img id="cms-ba-after" src="images/ba-blonde-after.jpg" alt="Після" draggable="false" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none;"/>
       <div id="ba-clip" style="position:absolute;inset:0;overflow:hidden;pointer-events:none;clip-path:inset(0 50% 0 0);">
-        <img src="images/ba-blonde-before.jpg" alt="До — пошкоджене волосся" draggable="false" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"/>
+        <img id="cms-ba-before" src="images/ba-blonde-before.jpg" alt="До" draggable="false" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;"/>
         <span style="position:absolute;left:16px;top:16px;padding:6px 14px;border-radius:100px;background:rgba(11,11,22,0.6);backdrop-filter:blur(8px);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">До</span>
       </div>
       <span style="position:absolute;right:16px;top:16px;padding:6px 14px;border-radius:100px;background:rgba(122,63,242,0.75);backdrop-filter:blur(8px);color:#fff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;">Після</span>
@@ -45,9 +46,9 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
       </div>
     </div>
     <div style="padding:10px 80px 10px 6px;">
-      <h2 style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(22px,2.6vw,30px);line-height:1.25;">Трансформація за один візит</h2>
-      <p style="margin:16px 0 0;font-size:16px;line-height:1.75;color:#5c5c72;max-width:460px;text-wrap:pretty;">Потягніть повзунок, щоб порівняти. Тут — відновлення пошкодженого волосся й перехід у теплий блонд-балаяж: знебарвлення, тонування та догляд, що повернув волоссю блиск і живу довжину.</p>
-      <p style="margin:14px 0 0;font-size:14px;color:#7a3ff2;font-weight:700;">Балаяж + догляд · від 3 500 грн</p>
+      <h2 id="cms-ba-title" style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(22px,2.6vw,30px);line-height:1.25;">Трансформація за один візит</h2>
+      <p id="cms-ba-text" style="margin:16px 0 0;font-size:16px;line-height:1.75;color:#5c5c72;max-width:460px;text-wrap:pretty;">Потягніть повзунок, щоб порівняти. Тут — відновлення пошкодженого волосся й перехід у теплий блонд-балаяж: знебарвлення, тонування та догляд, що повернув волоссю блиск і живу довжину.</p>
+      <p id="cms-ba-note" style="margin:14px 0 0;font-size:14px;color:#7a3ff2;font-weight:700;">Балаяж + догляд · від 3 500 грн</p>
     </div>
   </div>
 </section>
@@ -110,26 +111,15 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
   ba.addEventListener('pointerup', function () { dragging = false; });
   ba.addEventListener('pointercancel', function () { dragging = false; });
 
-  // --- Gallery filter + lightbox ---
-  var cats = [['all', 'Усі'], ['blond', 'Блонд і колір'], ['cut', 'Стрижки'], ['updo', 'Зачіски'], ['makeup', 'Макіяж']];
-  var items = [
-    { src: 'images/result-rosegold-waves.jpg', cap: 'Голлівудські локони', cat: 'updo' },
-    { src: 'images/haircut.jpg', cap: 'Стрижка шарами + контуринг', cat: 'cut' },
-    { src: 'images/result-makeup.jpg', cap: 'Вечірній макіяж', cat: 'makeup' },
-    { src: 'images/result-blonde-waves.jpg', cap: 'Блонд з локонами', cat: 'blond' },
-    { src: 'images/ba-color-after.png', cap: 'Карамельний блонд', cat: 'blond' },
-    { src: 'images/result-curls.jpg', cap: 'Пружні кучері', cat: 'blond' },
-    { src: 'images/updo.jpg', cap: 'Зачіска · низький пучок', cat: 'updo' },
-    { src: 'images/result-brows.jpg', cap: 'Оформлення брів', cat: 'makeup' },
-    { src: 'images/result-beige-straight.jpg', cap: 'Бежевий блонд', cat: 'blond' },
-    { src: 'images/bride.jpg', cap: 'Весільний образ', cat: 'makeup' },
-    { src: 'images/result-ash-straight.jpg', cap: 'Попелястий блонд', cat: 'blond' },
-    { src: 'images/updo-curls.jpg', cap: 'Вечірня зачіска', cat: 'updo' },
-    { src: 'images/ba-straight-after.png', cap: 'Кератинове випрямлення', cat: 'blond' },
-    { src: 'images/blonde-back.jpg', cap: 'Перлинний блонд', cat: 'blond' },
-    { src: 'images/waves.jpg', cap: 'Холодний балаяж', cat: 'blond' },
-    { src: 'images/blonde-back-2.jpg', cap: 'Стрижка + укладка', cat: 'cut' }
-  ];
+  // --- Gallery filter + lightbox (data comes from assets/content.json) ---
+  var cats = [['all', 'Усі']];
+  var items = [];
+  AvrroraContent.ready(function (content) {
+    cats = [['all', 'Усі']].concat(content.works.categories.map(function (c) { return [c.id, c.label]; }));
+    items = content.works.items;
+    renderFilters();
+    renderGrid();
+  });
   var filter = 'all';
   var fEl = document.getElementById('works-filters');
   var gEl = document.getElementById('works-grid');
@@ -174,8 +164,6 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
   lb.addEventListener('click', closeLightbox);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLightbox(); });
 
-  renderFilters();
-  renderGrid();
 })();
 </script>
 <script src="assets/site.js?v=4"></script>

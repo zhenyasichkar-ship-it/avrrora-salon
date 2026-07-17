@@ -6,6 +6,7 @@
 <title>FAQ — Avrrora</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/cms.js?v=1"></script>
 <style>
 html{scroll-behavior:smooth;}
 body{margin:0;background:#f7f7fb;color:#0b0b16;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
@@ -73,17 +74,8 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
   <p style="width:min(1200px,92vw);margin:50px auto 0;font-size:12px;color:rgba(255,255,255,0.35);">© 2026 Avrrora. Усі права захищено.</p>
 </footer>
 <script>
-(function () {
-  var faqData = [
-    { q: 'Скільки триває тотал блонд?', a: 'Від 4 до 8 годин залежно від вихідного кольору та стану волосся. Якщо волосся було пофарбоване в темний, іноді потрібно 2 візити — чесно скажемо це на консультації.' },
-    { q: 'Як підготуватися до кератину?', a: 'Ніяк особливо — просто прийдіть з немитим 1–2 дні волоссям або помиємо в салоні. Головне: не плануйте після процедури спортзал чи басейн на найближчі 3 дні.' },
-    { q: 'Чи можна прийти з дитиною?', a: 'Так, у нас є зона очікування з диваном. А дітей до 10 років стрижемо самі — від 350 грн.' },
-    { q: 'Чи потрібна передоплата?', a: 'Для звичайних послуг — ні. Для весільних образів і виїздів беремо передоплату 30%, вона фіксує дату за вами.' },
-    { q: 'Що як мені не сподобається результат?', a: 'Скажіть одразу — корекцію протягом 7 днів робимо безкоштовно. Нам важливо, щоб ви повернулися, а не просто пішли.' },
-    { q: 'Ви працюєте з чоловіками?', a: 'Так — стрижки, догляд і фарбування. Ціни ті самі, дивіться розділ «Послуги».' },
-    { q: 'За скільки записуватися?', a: 'На будні зазвичай є вікна день у день. На суботу та вечірні години краще за 3–5 днів, на весільні дати — за місяць.' },
-    { q: 'Які засоби ви використовуєте?', a: 'Професійні лінії для фарбування та догляду. Конкретні марки підбираємо під стан волосся — на консультації покажемо і пояснимо чому саме це.' }
-  ];
+AvrroraContent.ready(function (content) {
+  var faqData = content.faq;
   var open = 0;
   var host = document.getElementById('faq-list');
   var items = faqData.map(function (f, i) {
@@ -116,7 +108,7 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
     });
   }
   update();
-})();
+});
 </script>
 <script src="assets/site.js?v=4"></script>
 </body>

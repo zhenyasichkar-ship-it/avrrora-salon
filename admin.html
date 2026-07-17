@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Avrrora — адмін-панель</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:#f7f7fb;color:#0b0b16;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
+h1,h2,h3{font-family:'Unbounded',sans-serif;font-weight:500;}
+button{font-family:'Manrope',sans-serif;cursor:pointer;}
+input,textarea,select{font-family:'Manrope',sans-serif;font-size:15px;color:#0b0b16;background:#fff;border:1px solid rgba(11,11,22,0.14);border-radius:12px;padding:10px 14px;width:100%;}
+input:focus,textarea:focus,select:focus{outline:2px solid #7a3ff2;border-color:transparent;}
+textarea{resize:vertical;min-height:70px;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:100px;border:none;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-weight:700;font-size:14px;transition:transform .2s, box-shadow .2s;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(122,63,242,0.35);}
+.btn[disabled]{opacity:.5;pointer-events:none;}
+.btn-ghost{background:#fff;color:#3c3c50;border:1px solid rgba(11,11,22,0.14);}
+.btn-sm{padding:7px 12px;font-size:13px;border-radius:10px;background:#fff;color:#3c3c50;border:1px solid rgba(11,11,22,0.14);}
+.btn-sm:hover{border-color:#7a3ff2;color:#7a3ff2;}
+.btn-danger:hover{border-color:#e33;color:#e33;}
+.card{background:#fff;border:1px solid rgba(11,11,22,0.07);border-radius:20px;box-shadow:0 10px 30px rgba(11,11,22,0.05);padding:24px;}
+.row{display:flex;gap:10px;align-items:center;}
+.muted{color:#5c5c72;font-size:13.5px;}
+.tab{padding:11px 20px;border-radius:100px;border:1px solid rgba(11,11,22,0.12);background:#fff;color:#3c3c50;font-weight:700;font-size:14px;}
+.tab.active{background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;border-color:transparent;}
+.thumb{width:74px;height:74px;object-fit:cover;border-radius:12px;border:1px solid rgba(11,11,22,0.1);background:#eee;flex:none;}
+.pane{display:none;}
+.pane.active{display:block;}
+@media(max-width:700px){ .row-wrap{flex-wrap:wrap;} }
+</style>
+</head>
+<body>
+
+<!-- ===== Login ===== -->
+<div id="login-screen" style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;">
+  <form id="login-form" class="card" style="width:min(400px,94vw);padding:38px;">
+    <h1 style="margin:0 0 6px;font-size:26px;">Avrrora</h1>
+    <p class="muted" style="margin:0 0 24px;">Адмін-панель · вхід</p>
+    <input id="login-pass" type="password" placeholder="Пароль" autocomplete="current-password" required>
+    <p id="login-err" style="color:#e33;font-size:14px;min-height:20px;margin:10px 0 4px;"></p>
+    <button class="btn" type="submit" style="width:100%;justify-content:center;">Увійти</button>
+  </form>
+</div>
+
+<!-- ===== Panel ===== -->
+<div id="panel" style="display:none;max-width:1060px;margin:0 auto;padding:28px 4vw 120px;">
+  <div class="row row-wrap" style="justify-content:space-between;margin-bottom:26px;">
+    <div>
+      <h1 style="margin:0;font-size:24px;">Адмін-панель</h1>
+      <p id="draft-state" class="muted" style="margin:6px 0 0;">Зміни зберігаються як чернетка на цьому пристрої, поки ви не натиснете «Опублікувати».</p>
+    </div>
+    <div class="row">
+      <button id="btn-discard" class="btn btn-ghost" type="button">Скинути чернетку</button>
+      <button id="btn-publish" class="btn" type="button">Опублікувати</button>
+    </div>
+  </div>
+
+  <div id="publish-status" style="display:none;margin:0 0 20px;padding:16px 20px;border-radius:14px;font-weight:600;font-size:14.5px;"></div>
+
+  <div class="row row-wrap" style="gap:8px;margin-bottom:26px;">
+    <button class="tab active" data-tab="services" type="button">Послуги та ціни</button>
+    <button class="tab" data-tab="works" type="button">Роботи</button>
+    <button class="tab" data-tab="faq" type="button">FAQ</button>
+    <button class="tab" data-tab="texts" type="button">Тексти й контакти</button>
+    <button class="tab" data-tab="calc" type="button">Калькулятор</button>
+  </div>
+
+  <div id="pane-services" class="pane active"></div>
+  <div id="pane-works" class="pane"></div>
+  <div id="pane-faq" class="pane"></div>
+  <div id="pane-texts" class="pane"></div>
+  <div id="pane-calc" class="pane"></div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var TOKEN_KEY = 'avr-admin-token';
+  var DRAFT_KEY = 'avr-admin-draft';
+  var content = null;          // working copy
+  var pendingImages = {};      // path -> base64 (no prefix)
+
+  // ---------- auth ----------
+  function token() { return localStorage.getItem(TOKEN_KEY) || ''; }
+  function tokenValid() {
+    var t = token(); if (!t) return false;
+    var exp = parseInt(t.split('.')[0], 10);
+    return exp && exp > Date.now();
+  }
+
+  document.getElementById('login-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = document.getElementById('login-err');
+    err.textContent = '';
+    fetch('/api/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: document.getElementById('login-pass').value })
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (!res.ok) { err.textContent = res.d.error || 'Помилка входу'; return; }
+        localStorage.setItem(TOKEN_KEY, res.d.token);
+        boot();
+      }).catch(function () { err.textContent = 'Сервер недоступний'; });
+  });
+
+  // ---------- data ----------
+  function loadContent() {
+    return fetch('assets/content.json?ts=' + Date.now()).then(function (r) { return r.json(); });
+  }
+  function saveDraft() {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify({ content: content, images: pendingImages }));
+    setDraftState('Чернетка збережена на цьому пристрої — не забудьте опублікувати.');
+  }
+  function setDraftState(t) { document.getElementById('draft-state').textContent = t; }
+
+  function boot() {
+    if (!tokenValid()) return;
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('panel').style.display = 'block';
+    var draft = null;
+    try { draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) {}
+    if (draft && draft.content) {
+      content = draft.content;
+      pendingImages = draft.images || {};
+      setDraftState('Відновлено незбережену чернетку. Опублікуйте або скиньте її.');
+      renderAll();
+    } else {
+      loadContent().then(function (c) { content = c; renderAll(); });
+    }
+  }
+
+  // ---------- helpers ----------
+  function el(tag, attrs, children) {
+    var n = document.createElement(tag);
+    Object.keys(attrs || {}).forEach(function (k) {
+      if (k === 'text') n.textContent = attrs[k];
+      else if (k === 'html') n.innerHTML = attrs[k];
+      else if (k.indexOf('on') === 0) n.addEventListener(k.slice(2), attrs[k]);
+      else n.setAttribute(k, attrs[k]);
+    });
+    (children || []).forEach(function (c) { if (c) n.appendChild(c); });
+    return n;
+  }
+  function input(value, oninput, placeholder) {
+    var i = el('input', { placeholder: placeholder || '' });
+    i.value = value || '';
+    i.addEventListener('input', function () { oninput(i.value); saveDraft(); });
+    return i;
+  }
+  function textarea(value, oninput) {
+    var t = el('textarea');
+    t.value = value || '';
+    t.addEventListener('input', function () { oninput(t.value); saveDraft(); });
+    return t;
+  }
+  function moveBtns(arr, i, rerender) {
+    return el('div', { style: 'display:flex;flex-direction:column;gap:4px;flex:none;' }, [
+      el('button', { class: 'btn-sm', type: 'button', text: '↑', onclick: function () {
+        if (i > 0) { arr.splice(i - 1, 0, arr.splice(i, 1)[0]); saveDraft(); rerender(); }
+      } }),
+      el('button', { class: 'btn-sm', type: 'button', text: '↓', onclick: function () {
+        if (i < arr.length - 1) { arr.splice(i + 1, 0, arr.splice(i, 1)[0]); saveDraft(); rerender(); }
+      } })
+    ]);
+  }
+  function delBtn(arr, i, rerender, label) {
+    return el('button', { class: 'btn-sm btn-danger', type: 'button', text: label || 'Видалити', onclick: function () {
+      if (confirm('Видалити?')) { arr.splice(i, 1); saveDraft(); rerender(); }
+    } });
+  }
+  function slug(s) {
+    var map = { а:'a',б:'b',в:'v',г:'h',ґ:'g',д:'d',е:'e',є:'ie',ж:'zh',з:'z',и:'y',і:'i',ї:'i',й:'i',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'kh',ц:'ts',ч:'ch',ш:'sh',щ:'shch',ь:'',ю:'iu',я:'ia' };
+    return String(s || 'photo').toLowerCase().split('').map(function (ch) { return map[ch] !== undefined ? map[ch] : ch; })
+      .join('').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'photo';
+  }
+
+  // Compress an uploaded image on-device, register it for publishing,
+  // return its future repo path.
+  function processUpload(file, nameHint) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      var url = URL.createObjectURL(file);
+      img.onload = function () {
+        URL.revokeObjectURL(url);
+        var MAX = 1600;
+        var scale = Math.min(1, MAX / Math.max(img.width, img.height));
+        var c = document.createElement('canvas');
+        c.width = Math.round(img.width * scale);
+        c.height = Math.round(img.height * scale);
+        c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+        var dataUrl = c.toDataURL('image/jpeg', 0.86);
+        var path = 'images/uploads/' + slug(nameHint || file.name.replace(/\.\w+$/, '')) + '-' + Date.now().toString(36) + '.jpg';
+        pendingImages[path] = dataUrl.split(',')[1];
+        resolve(path);
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+  // Preview helper: pending images live only in memory until published.
+  function imgSrc(path) {
+    return pendingImages[path] ? 'data:image/jpeg;base64,' + pendingImages[path] : '/' + path;
+  }
+  function uploadBtn(label, nameHint, onDone) {
+    var inp = el('input', { type: 'file', accept: 'image/*', style: 'display:none;' });
+    inp.addEventListener('change', function () {
+      if (!inp.files[0]) return;
+      processUpload(inp.files[0], nameHint).then(function (path) { onDone(path); saveDraft(); });
+    });
+    var b = el('button', { class: 'btn-sm', type: 'button', text: label, onclick: function () { inp.click(); } });
+    return el('span', {}, [b, inp]);
+  }
+
+  // ---------- panes ----------
+  function renderAll() { renderServices(); renderWorks(); renderFaq(); renderTexts(); renderCalc(); }
+
+  function renderServices() {
+    var host = document.getElementById('pane-services');
+    host.innerHTML = '';
+    host.appendChild(el('div', { class: 'card', style: 'margin-bottom:16px;' }, [
+      el('p', { class: 'muted', style: 'margin:0 0 8px;', text: 'Вступний текст сторінки «Послуги»' }),
+      textarea(content.services.intro, function (v) { content.services.intro = v; })
+    ]));
+    content.services.categories.forEach(function (cat, ci) {
+      var card = el('div', { class: 'card', style: 'margin-bottom:16px;' });
+      var head = el('div', { class: 'row row-wrap', style: 'margin-bottom:14px;' }, [
+        el('img', { class: 'thumb', src: imgSrc(cat.image), alt: '' }),
+        input(cat.title, function (v) { cat.title = v; }, 'Назва категорії'),
+        uploadBtn('Фото', cat.title, function (p) { cat.image = p; renderServices(); }),
+        moveBtns(content.services.categories, ci, renderServices),
+        delBtn(content.services.categories, ci, renderServices)
+      ]);
+      card.appendChild(head);
+      cat.items.forEach(function (it, ii) {
+        card.appendChild(el('div', { class: 'row row-wrap', style: 'margin-bottom:8px;' }, [
+          input(it.name, function (v) { it.name = v; }, 'Послуга'),
+          el('div', { style: 'width:170px;flex:none;' }, [input(it.price, function (v) { it.price = v; }, 'від 000 грн')]),
+          moveBtns(cat.items, ii, renderServices),
+          delBtn(cat.items, ii, renderServices, '✕')
+        ]));
+      });
+      card.appendChild(el('button', { class: 'btn-sm', type: 'button', text: '+ Додати послугу', onclick: function () {
+        cat.items.push({ name: '', price: 'від ' }); saveDraft(); renderServices();
+      } }));
+      host.appendChild(card);
+    });
+    host.appendChild(el('button', { class: 'btn btn-ghost', type: 'button', text: '+ Додати категорію', onclick: function () {
+      content.services.categories.push({ title: 'Нова категорія', image: 'images/haircut.jpg', items: [] });
+      saveDraft(); renderServices();
+    } }));
+  }
+
+  function renderWorks() {
+    var host = document.getElementById('pane-works');
+    host.innerHTML = '';
+    var ba = content.works.beforeAfter;
+    host.appendChild(el('div', { class: 'card', style: 'margin-bottom:16px;' }, [
+      el('h3', { style: 'margin:0 0 14px;font-size:17px;', text: 'Блок «До / після»' }),
+      el('div', { class: 'row row-wrap', style: 'margin-bottom:12px;' }, [
+        el('div', { style: 'text-align:center;' }, [
+          el('img', { class: 'thumb', src: imgSrc(ba.before), alt: '' }),
+          el('div', {}, [uploadBtn('Фото «До»', 'before', function (p) { ba.before = p; renderWorks(); })])
+        ]),
+        el('div', { style: 'text-align:center;' }, [
+          el('img', { class: 'thumb', src: imgSrc(ba.after), alt: '' }),
+          el('div', {}, [uploadBtn('Фото «Після»', 'after', function (p) { ba.after = p; renderWorks(); })])
+        ]),
+        el('div', { style: 'flex:1;min-width:240px;' }, [
+          input(ba.title, function (v) { ba.title = v; }, 'Заголовок'),
+          el('div', { style: 'height:8px;' }),
+          input(ba.note, function (v) { ba.note = v; }, 'Підпис із ціною')
+        ])
+      ]),
+      textarea(ba.text, function (v) { ba.text = v; })
+    ]));
+
+    var gal = el('div', { class: 'card' });
+    gal.appendChild(el('div', { class: 'row', style: 'justify-content:space-between;margin-bottom:14px;' }, [
+      el('h3', { style: 'margin:0;font-size:17px;', text: 'Галерея (' + content.works.items.length + ' фото)' }),
+      (function () {
+        var inp = el('input', { type: 'file', accept: 'image/*', multiple: 'multiple', style: 'display:none;' });
+        inp.addEventListener('change', function () {
+          var files = Array.from(inp.files || []);
+          Promise.all(files.map(function (f) { return processUpload(f); })).then(function (paths) {
+            paths.forEach(function (p) { content.works.items.unshift({ src: p, cap: '', cat: 'blond' }); });
+            saveDraft(); renderWorks();
+          });
+        });
+        var b = el('button', { class: 'btn', type: 'button', text: '+ Додати фото', onclick: function () { inp.click(); } });
+        return el('span', {}, [b, inp]);
+      })()
+    ]));
+    content.works.items.forEach(function (it, i) {
+      var sel = el('select', { style: 'width:180px;flex:none;' });
+      content.works.categories.forEach(function (c) {
+        var o = el('option', { value: c.id, text: c.label });
+        if (c.id === it.cat) o.selected = true;
+        sel.appendChild(o);
+      });
+      sel.addEventListener('change', function () { it.cat = sel.value; saveDraft(); });
+      gal.appendChild(el('div', { class: 'row row-wrap', style: 'margin-bottom:10px;' }, [
+        el('img', { class: 'thumb', src: imgSrc(it.src), alt: '' }),
+        input(it.cap, function (v) { it.cap = v; }, 'Підпис'),
+        sel,
+        moveBtns(content.works.items, i, renderWorks),
+        delBtn(content.works.items, i, renderWorks, '✕')
+      ]));
+    });
+    host.appendChild(gal);
+  }
+
+  function renderFaq() {
+    var host = document.getElementById('pane-faq');
+    host.innerHTML = '';
+    content.faq.forEach(function (f, i) {
+      host.appendChild(el('div', { class: 'card', style: 'margin-bottom:14px;' }, [
+        el('div', { class: 'row row-wrap', style: 'margin-bottom:10px;' }, [
+          input(f.q, function (v) { f.q = v; }, 'Питання'),
+          moveBtns(content.faq, i, renderFaq),
+          delBtn(content.faq, i, renderFaq, '✕')
+        ]),
+        textarea(f.a, function (v) { f.a = v; })
+      ]));
+    });
+    host.appendChild(el('button', { class: 'btn btn-ghost', type: 'button', text: '+ Додати питання', onclick: function () {
+      content.faq.push({ q: '', a: '' }); saveDraft(); renderFaq();
+    } }));
+  }
+
+  function renderTexts() {
+    var host = document.getElementById('pane-texts');
+    host.innerHTML = '';
+    var ct = content.contacts;
+    function field(label, value, oninput, multiline) {
+      return el('div', { style: 'margin-bottom:14px;' }, [
+        el('p', { class: 'muted', style: 'margin:0 0 6px;', text: label }),
+        multiline ? textarea(value, oninput) : input(value, oninput)
+      ]);
+    }
+    host.appendChild(el('div', { class: 'card', style: 'margin-bottom:16px;' }, [
+      el('h3', { style: 'margin:0 0 14px;font-size:17px;', text: 'Контакти (застосовуються на всіх сторінках)' }),
+      field('Телефон (формат +380…)', ct.phone, function (v) { ct.phone = v; }),
+      field('Телефон — як показувати', ct.phoneDisplay, function (v) { ct.phoneDisplay = v; }),
+      field('Instagram (без @)', ct.instagram, function (v) { ct.instagram = v; }),
+      field('Рядок у футері', ct.footerLine, function (v) { ct.footerLine = v; }),
+      field('Опис на сторінці «Контакти»', ct.headerBlurb, function (v) { ct.headerBlurb = v; }, true),
+      field('Заголовок блоку запису', ct.bookingTitle, function (v) { ct.bookingTitle = v; }),
+      field('Підзаголовок блоку запису', ct.bookingSubtitle, function (v) { ct.bookingSubtitle = v; })
+    ]));
+    var dirs = el('div', { class: 'card', style: 'margin-bottom:16px;' }, [
+      el('h3', { style: 'margin:0 0 14px;font-size:17px;', text: 'Як дістатися' })
+    ]);
+    ct.directions.forEach(function (d) {
+      dirs.appendChild(el('div', { style: 'margin-bottom:12px;' }, [
+        input(d.title, function (v) { d.title = v; }, 'Заголовок'),
+        el('div', { style: 'height:8px;' }),
+        textarea(d.text, function (v) { d.text = v; })
+      ]));
+    });
+    host.appendChild(dirs);
+    host.appendChild(el('div', { class: 'card' }, [
+      el('h3', { style: 'margin:0 0 14px;font-size:17px;', text: 'Головна сторінка' }),
+      field('Слоган під відео', content.hero.tagline, function (v) { content.hero.tagline = v; }, true)
+    ]));
+  }
+
+  function renderCalc() {
+    var host = document.getElementById('pane-calc');
+    host.innerHTML = '';
+    var card = el('div', { class: 'card' }, [
+      el('p', { class: 'muted', style: 'margin:0 0 14px;', text: 'Ціни «від» для трьох довжин волосся: коротке / середнє / довге.' })
+    ]);
+    content.calculator.services.forEach(function (s, i) {
+      var prices = s.base.map(function (p, j) {
+        var inp = el('input', { type: 'number', style: 'width:100px;flex:none;' });
+        inp.value = p;
+        inp.addEventListener('input', function () { s.base[j] = parseInt(inp.value, 10) || 0; saveDraft(); });
+        return inp;
+      });
+      card.appendChild(el('div', { class: 'row row-wrap', style: 'margin-bottom:8px;' }, [
+        input(s.label, function (v) { s.label = v; }, 'Послуга')
+      ].concat(prices).concat([delBtn(content.calculator.services, i, renderCalc, '✕')])));
+    });
+    card.appendChild(el('button', { class: 'btn-sm', type: 'button', text: '+ Додати рядок', onclick: function () {
+      content.calculator.services.push({ label: '', base: [0, 0, 0] }); saveDraft(); renderCalc();
+    } }));
+    host.appendChild(card);
+  }
+
+  // ---------- tabs ----------
+  document.querySelectorAll('.tab').forEach(function (t) {
+    t.addEventListener('click', function () {
+      document.querySelectorAll('.tab').forEach(function (x) { x.classList.remove('active'); });
+      document.querySelectorAll('.pane').forEach(function (x) { x.classList.remove('active'); });
+      t.classList.add('active');
+      document.getElementById('pane-' + t.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------- publish ----------
+  function status(msg, ok) {
+    var s = document.getElementById('publish-status');
+    s.style.display = 'block';
+    s.style.background = ok ? 'rgba(47,216,132,0.12)' : 'rgba(238,51,51,0.1)';
+    s.style.color = ok ? '#0a7a44' : '#c22';
+    s.textContent = msg;
+  }
+
+  document.getElementById('btn-discard').addEventListener('click', function () {
+    if (!confirm('Скинути всі незбережені зміни?')) return;
+    localStorage.removeItem(DRAFT_KEY);
+    pendingImages = {};
+    loadContent().then(function (c) { content = c; renderAll(); setDraftState('Чернетку скинуто — показано опублікований вміст.'); });
+  });
+
+  document.getElementById('btn-publish').addEventListener('click', function () {
+    var btn = this;
+    // Only ship images that the current content still references.
+    var used = JSON.stringify(content);
+    var files = Object.keys(pendingImages)
+      .filter(function (p) { return used.indexOf(p) !== -1; })
+      .map(function (p) { return { path: p, b64: pendingImages[p] }; });
+    files.push({ path: 'assets/content.json', b64: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))) });
+
+    btn.disabled = true;
+    status('Публікуємо…', true);
+    fetch('/api/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token() },
+      body: JSON.stringify({ message: 'Admin: update site content', files: files })
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        btn.disabled = false;
+        if (!res.ok) { status('Помилка: ' + (res.d.error || 'невідома'), false); return; }
+        localStorage.removeItem(DRAFT_KEY);
+        pendingImages = {};
+        status('Опубліковано (коміт ' + res.d.commit + '). Сайт оновиться протягом ~1 хвилини.', true);
+        setDraftState('Все опубліковано.');
+      })
+      .catch(function () { btn.disabled = false; status('Сервер недоступний', false); });
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>

@@ -6,6 +6,7 @@
 <title>Контакти — Avrrora</title>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="assets/cms.js?v=1"></script>
 <style>
 html{scroll-behavior:smooth;}
 body{margin:0;background:#f7f7fb;color:#0b0b16;font-family:'Manrope',sans-serif;-webkit-font-smoothing:antialiased;}
@@ -27,7 +28,7 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
 <header style="width:min(1200px,92vw);margin:0 auto;padding:160px 0 50px;">
   <p style="margin:0 0 14px;font-size:13px;font-weight:800;letter-spacing:.26em;text-transform:uppercase;color:#7a3ff2;">Де нас знайти</p>
   <h1 style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(34px,5vw,60px);line-height:1.12;letter-spacing:-0.01em;">Контакти</h1>
-  <p style="margin:20px 0 0;max-width:620px;font-size:18px;line-height:1.7;color:#5c5c72;text-wrap:pretty;">Київ, вул. Січових Стрільців, 77 — 2-й поверх, вхід з двору. Працюємо щодня з 9:00 до 20:00.</p>
+  <p id="cms-contacts-blurb" style="margin:20px 0 0;max-width:620px;font-size:18px;line-height:1.7;color:#5c5c72;text-wrap:pretty;">Київ, вул. Січових Стрільців, 77 — 2-й поверх, вхід з двору. Працюємо щодня з 9:00 до 20:00.</p>
 </header>
 <section style="width:min(1200px,92vw);margin:0 auto;padding:20px 0 60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px;align-items:stretch;">
   <div data-reveal="1" style="border-radius:26px;overflow:hidden;border:1px solid rgba(11,11,22,0.06);box-shadow:0 14px 40px rgba(11,11,22,0.08);min-height:440px;background:#e8e8f2;">
@@ -35,16 +36,16 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
   </div>
   <div style="display:flex;flex-direction:column;gap:18px;">
     <div data-reveal="1" style="padding:30px 34px;border-radius:24px;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 10px 30px rgba(11,11,22,0.05);">
-      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;color:#2f4fd8;">Метро</p>
-      <p style="margin:10px 0 0;font-size:15px;line-height:1.7;color:#3c3c50;text-wrap:pretty;">Станція «Лук'янівська» — 7 хвилин пішки. Вихід у бік вул. Січових Стрільців, далі прямо повз сквер до будинку 77.</p>
+      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;color:#2f4fd8;" id="cms-dir-title-0">Метро</p>
+      <p id="cms-dir-text-0" style="margin:10px 0 0;font-size:15px;line-height:1.7;color:#3c3c50;text-wrap:pretty;">Станція «Лук'янівська» — 7 хвилин пішки. Вихід у бік вул. Січових Стрільців, далі прямо повз сквер до будинку 77.</p>
     </div>
     <div data-reveal="1" style="padding:30px 34px;border-radius:24px;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 10px 30px rgba(11,11,22,0.05);">
-      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;color:#2f4fd8;">Маршрутка</p>
-      <p style="margin:10px 0 0;font-size:15px;line-height:1.7;color:#3c3c50;text-wrap:pretty;">№ 477 від ст. м. «Вокзальна» — до зупинки «Січових Стрільців». Від зупинки до входу — 2 хвилини, орієнтир: арка з двору.</p>
+      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;color:#2f4fd8;" id="cms-dir-title-1">Маршрутка</p>
+      <p id="cms-dir-text-1" style="margin:10px 0 0;font-size:15px;line-height:1.7;color:#3c3c50;text-wrap:pretty;">№ 477 від ст. м. «Вокзальна» — до зупинки «Січових Стрільців». Від зупинки до входу — 2 хвилини, орієнтир: арка з двору.</p>
     </div>
     <div data-reveal="1" style="padding:30px 34px;border-radius:24px;background:#fff;border:1px solid rgba(11,11,22,0.06);box-shadow:0 10px 30px rgba(11,11,22,0.05);">
-      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;color:#2f4fd8;">Авто</p>
-      <p style="margin:10px 0 0;font-size:15px;line-height:1.7;color:#3c3c50;text-wrap:pretty;">Безкоштовний паркінг у дворі будинку — заїзд через арку з вул. Січових Стрільців. Увечері місця є майже завжди.</p>
+      <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;color:#2f4fd8;" id="cms-dir-title-2">Авто</p>
+      <p id="cms-dir-text-2" style="margin:10px 0 0;font-size:15px;line-height:1.7;color:#3c3c50;text-wrap:pretty;">Безкоштовний паркінг у дворі будинку — заїзд через арку з вул. Січових Стрільців. Увечері місця є майже завжди.</p>
     </div>
   </div>
 </section>
@@ -53,14 +54,23 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
     <div style="position:absolute;right:-140px;top:-160px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle, rgba(122,63,242,0.45), transparent 65%);"></div>
     <div style="position:relative;display:flex;justify-content:space-between;align-items:center;gap:30px;flex-wrap:wrap;">
       <div>
-        <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(22px,2.6vw,30px);">Запис — за дзвінком або в Instagram</p>
-        <p style="margin:10px 0 0;font-size:15px;color:rgba(255,255,255,0.75);">Щодня 9:00–20:00 · відповідаємо у Direct протягом години</p>
+        <p style="margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:clamp(22px,2.6vw,30px);" id="cms-booking-title">Запис — за дзвінком або в Instagram</p>
+        <p style="margin:10px 0 0;font-size:15px;color:rgba(255,255,255,0.75);" id="cms-booking-subtitle">Щодня 9:00–20:00 · відповідаємо у Direct протягом години</p>
       </div>
       <div style="display:flex;gap:14px;flex-wrap:wrap;">
         <a href="tel:+380987779898" style="display:inline-block;padding:15px 30px;border-radius:100px;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-weight:700;font-size:15px;box-shadow:0 12px 34px rgba(122,63,242,0.4);transition:transform .35s;" style-hover="color:#fff;transform:translateY(-3px);">098 777 98 98</a>
         <a href="https://instagram.com/avrrorabeauty" style="display:inline-block;padding:15px 30px;border-radius:100px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.35);color:#fff;font-weight:700;font-size:15px;transition:background .35s;" style-hover="color:#fff;background:rgba(255,255,255,0.24);">@avrrorabeauty</a>
       </div>
     </div>
+    <form id="booking-form" style="position:relative;margin-top:34px;padding-top:30px;border-top:1px solid rgba(255,255,255,0.12);display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;align-items:end;">
+      <p style="grid-column:1/-1;margin:0;font-family:'Unbounded',sans-serif;font-weight:500;font-size:17px;">Або залиште заявку — передзвонимо</p>
+      <input name="name" placeholder="Ваше ім'я" required maxlength="100" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"/>
+      <input name="phone" placeholder="Телефон" required maxlength="30" inputmode="tel" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"/>
+      <select name="service" style="padding:13px 16px;border-radius:14px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:#fff;font-family:'Manrope',sans-serif;font-size:15px;"><option value="">Послуга (не обов'язково)</option></select>
+      <input name="website" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" aria-hidden="true"/>
+      <button type="submit" style="padding:14px 26px;border-radius:100px;border:none;background:linear-gradient(120deg,#2f4fd8,#7a3ff2);color:#fff;font-family:'Manrope',sans-serif;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 12px 34px rgba(122,63,242,0.4);">Надіслати</button>
+      <p id="booking-status" style="grid-column:1/-1;margin:0;min-height:20px;font-size:14px;font-weight:600;"></p>
+    </form>
   </div>
 </section>
 <div style="position:fixed;right:20px;bottom:20px;z-index:110;display:flex;flex-direction:column;gap:12px;">
@@ -87,6 +97,49 @@ a{color:#2f4fd8;text-decoration:none;transition:color .3s;} a:hover{color:#7a3ff
   </div>
   <p style="width:min(1200px,92vw);margin:50px auto 0;font-size:12px;color:rgba(255,255,255,0.35);">© 2026 Avrrora. Усі права захищено.</p>
 </footer>
+<script>
+AvrroraContent.ready(function (content) {
+  var form = document.getElementById('booking-form');
+  var sel = form.querySelector('select[name="service"]');
+  content.services.categories.forEach(function (c) {
+    var o = document.createElement('option');
+    o.value = c.title; o.textContent = c.title;
+    sel.appendChild(o);
+  });
+  var st = document.getElementById('booking-status');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    btn.disabled = true;
+    st.style.color = 'rgba(255,255,255,0.8)';
+    st.textContent = 'Надсилаємо…';
+    fetch('/api/booking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: form.name.value, phone: form.phone.value,
+        service: sel.value, comment: '', website: form.website.value
+      })
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        btn.disabled = false;
+        if (res.ok) {
+          st.style.color = '#7ee2a8';
+          st.textContent = 'Дякуємо! Ми отримали заявку і передзвонимо найближчим часом.';
+          form.reset();
+        } else {
+          st.style.color = '#ff9c9c';
+          st.textContent = res.d.error || 'Щось пішло не так — зателефонуйте нам, будь ласка.';
+        }
+      })
+      .catch(function () {
+        btn.disabled = false;
+        st.style.color = '#ff9c9c';
+        st.textContent = 'Немає зв\'язку з сервером — зателефонуйте нам, будь ласка.';
+      });
+  });
+});
+</script>
 <script src="assets/site.js?v=4"></script>
 </body>
 </html>
