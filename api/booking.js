@@ -57,6 +57,7 @@ module.exports = async (req, res) => {
     if (String(e.message || '').includes('bookings_slot')) {
       return res.status(409).json({ error: 'Цей час щойно зайняли — оберіть, будь ласка, інший.' });
     }
+    console.error('DB error in booking:', e);
     return res.status(502).json({ error: 'Не вдалося зберегти запис — зателефонуйте нам, будь ласка.' });
   }
 

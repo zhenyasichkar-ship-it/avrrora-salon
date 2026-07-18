@@ -14,6 +14,7 @@ module.exports = async (req, res) => {
     const rows = await sql`SELECT time FROM bookings WHERE date = ${date} AND status <> 'cancelled'`;
     res.status(200).json({ slots: SLOTS, taken: rows.map((r) => r.time) });
   } catch (e) {
+    console.error('DB error in slots:', e);
     res.status(502).json({ error: 'База даних недоступна' });
   }
 };

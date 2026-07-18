@@ -36,6 +36,7 @@ module.exports = async (req, res) => {
 
     res.status(405).json({ error: 'Method not allowed' });
   } catch (e) {
+    console.error('DB error in requests:', e);
     res.status(502).json({ error: 'База даних недоступна' });
   }
 };
