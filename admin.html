@@ -235,7 +235,7 @@ textarea{resize:vertical;min-height:70px;}
       })
       .then(function (res) {
         if (!res.ok) throw new Error(res.d.error || 'Помилка завантаження');
-        renderRequests(res.d.bookings);
+        renderRequests(res.d.bookings, res.d.stats);
       })
       .catch(function (e) {
         host.innerHTML = '';
@@ -249,11 +249,43 @@ textarea{resize:vertical;min-height:70px;}
       });
   }
 
-  function renderRequests(items) {
+  var SLOT_TIMES = (function () {
+    var t = [];
+    for (var h = 10; h < 19; h++) { t.push((h < 10 ? '0' : '') + h + ':00'); t.push((h < 10 ? '0' : '') + h + ':30'); }
+    return t;
+  })();
+
+  function reqApi(method, body, done) {
+    fetch('/api/requests', {
+      method: method,
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token() },
+      body: JSON.stringify(body)
+    }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { done(r.ok, d); }); })
+      .catch(function () { done(false, { error: 'Сервер недоступний' }); });
+  }
+
+  function renderRequests(items, stats) {
     var host = document.getElementById('pane-requests');
     host.innerHTML = '';
-    var newCount = items.filter(function (b) { return b.status === 'new'; }).length;
-    document.getElementById('tab-requests').textContent = newCount ? 'Заявки (' + newCount + ')' : 'Заявки';
+    stats = stats || { total: 0, new: 0, contacted: 0, done: 0, cancelled: 0 };
+    document.getElementById('tab-requests').textContent = stats.new ? 'Заявки (' + stats.new + ')' : 'Заявки';
+
+    // Dashboard tiles.
+    var tiles = [
+      ['Всього', stats.total, '#0b0b16'],
+      ['Нові', stats.new, STATUS_COLORS.new],
+      ["Зв'язались", stats.contacted, STATUS_COLORS.contacted],
+      ['Готово', stats.done, STATUS_COLORS.done],
+      ['Скасовано', stats.cancelled, STATUS_COLORS.cancelled]
+    ];
+    host.appendChild(el('div', { style: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px;' },
+      tiles.map(function (t) {
+        return el('div', { class: 'card', style: 'padding:16px 18px;text-align:center;' }, [
+          el('p', { style: 'margin:0;font-family:\'Unbounded\',sans-serif;font-weight:600;font-size:26px;color:' + t[2] + ';', text: String(t[1]) }),
+          el('p', { class: 'muted', style: 'margin:4px 0 0;font-size:13px;', text: t[0] })
+        ]);
+      })
+    ));
 
     host.appendChild(el('div', { class: 'row', style: 'gap:8px;margin-bottom:16px;' }, [
       el('button', { class: 'btn-sm', type: 'button', text: reqScope === 'active' ? '☑ Актуальні' : 'Актуальні', onclick: function () { reqScope = 'active'; loadRequests(); } }),
@@ -266,7 +298,14 @@ textarea{resize:vertical;min-height:70px;}
       return;
     }
 
-    items.forEach(function (b) {
+    items.forEach(function (b) { host.appendChild(bookingCard(b)); });
+  }
+
+  function bookingCard(b) {
+    var card = el('div', { class: 'card', style: 'margin-bottom:10px;padding:18px 22px;' });
+
+    function viewMode() {
+      card.innerHTML = '';
       var sel = el('select', { style: 'width:150px;flex:none;border-color:' + (STATUS_COLORS[b.status] || '#ccc') + ';' });
       Object.keys(STATUS_LABELS).forEach(function (s) {
         var o = el('option', { value: s, text: STATUS_LABELS[s] });
@@ -275,31 +314,66 @@ textarea{resize:vertical;min-height:70px;}
       });
       sel.addEventListener('change', function () {
         sel.disabled = true;
-        fetch('/api/requests', {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token() },
-          body: JSON.stringify({ id: b.id, status: sel.value })
-        }).then(function (r) {
+        reqApi('PATCH', { id: b.id, status: sel.value }, function (ok, d) {
           sel.disabled = false;
-          if (r.ok) { b.status = sel.value; loadRequests(); }
-          else alert('Не вдалося оновити статус');
-        }).catch(function () { sel.disabled = false; alert('Сервер недоступний'); });
+          if (ok) { b.status = sel.value; loadRequests(); }
+          else alert(d.error || 'Не вдалося оновити статус');
+        });
       });
 
       var when = b.date.split('-').reverse().join('.') + ' о ' + b.time;
-      host.appendChild(el('div', { class: 'card', style: 'margin-bottom:10px;padding:18px 22px;' }, [
-        el('div', { class: 'row row-wrap', style: 'justify-content:space-between;' }, [
-          el('div', {}, [
-            el('p', { style: 'margin:0;font-weight:800;font-size:16px;', text: when + ' · ' + b.name }),
-            el('p', { class: 'muted', style: 'margin:6px 0 0;' }, [
-              el('a', { href: 'tel:' + b.phone.replace(/[^+\d]/g, ''), style: 'font-weight:700;', text: b.phone }),
-              el('span', { text: b.service ? ' · ' + b.service : '' })
-            ])
-          ]),
-          sel
+      card.appendChild(el('div', { class: 'row row-wrap', style: 'justify-content:space-between;' }, [
+        el('div', {}, [
+          el('p', { style: 'margin:0;font-weight:800;font-size:16px;', text: when + ' · ' + b.name }),
+          el('p', { class: 'muted', style: 'margin:6px 0 0;' }, [
+            el('a', { href: 'tel:' + b.phone.replace(/[^+\d]/g, ''), style: 'font-weight:700;', text: b.phone }),
+            el('span', { text: b.service ? ' · ' + b.service : '' })
+          ])
+        ]),
+        el('div', { class: 'row', style: 'gap:8px;' }, [
+          sel,
+          el('button', { class: 'btn-sm', type: 'button', text: '✎', title: 'Редагувати', onclick: editMode }),
+          el('button', { class: 'btn-sm btn-danger', type: 'button', text: '🗑', title: 'Видалити', onclick: function () {
+            if (!confirm('Видалити заявку «' + b.name + '» назавжди? Якщо просто не актуальна — краще поставити статус «Скасовано».')) return;
+            reqApi('DELETE', { id: b.id }, function (ok, d) {
+              if (ok) loadRequests();
+              else alert(d.error || 'Не вдалося видалити');
+            });
+          } })
         ])
       ]));
-    });
+    }
+
+    function editMode() {
+      card.innerHTML = '';
+      var nameI = el('input', { placeholder: "Ім'я" }); nameI.value = b.name;
+      var phoneI = el('input', { placeholder: 'Телефон' }); phoneI.value = b.phone;
+      var serviceI = el('input', { placeholder: 'Послуга' }); serviceI.value = b.service || '';
+      var dateI = el('input', { type: 'date' }); dateI.value = b.date;
+      var timeI = el('select', {});
+      var times = SLOT_TIMES.indexOf(b.time) === -1 ? [b.time].concat(SLOT_TIMES) : SLOT_TIMES;
+      times.forEach(function (t) {
+        var o = el('option', { value: t, text: t });
+        if (t === b.time) o.selected = true;
+        timeI.appendChild(o);
+      });
+      card.appendChild(el('div', { style: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px;' }, [nameI, phoneI, serviceI, dateI, timeI]));
+      card.appendChild(el('div', { class: 'row', style: 'gap:8px;' }, [
+        el('button', { class: 'btn-sm', type: 'button', text: 'Зберегти', onclick: function () {
+          reqApi('PATCH', {
+            id: b.id, name: nameI.value, phone: phoneI.value, service: serviceI.value,
+            date: dateI.value, time: timeI.value
+          }, function (ok, d) {
+            if (ok) loadRequests();
+            else alert(d.error || 'Не вдалося зберегти');
+          });
+        } }),
+        el('button', { class: 'btn-sm', type: 'button', text: 'Скасувати', onclick: viewMode })
+      ]));
+    }
+
+    viewMode();
+    return card;
   }
 
   function renderServices() {
