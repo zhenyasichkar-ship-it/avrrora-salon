@@ -16,15 +16,45 @@
   } catch (e) {}
 
   // ---------- theme ----------
-  // Root-level invert flips the light design to dark; media re-inverts so
-  // photos, video and the map stay natural. The filter-on-root exemption in
-  // the CSS spec keeps position:fixed elements working.
+  // A real dark theme: light surfaces are remapped to near-black via
+  // attribute-substring overrides of the site's inline styles. Sections that
+  // are already dark (footer, marquee, booking card) are left untouched, and
+  // photos keep their natural colours.
   var css = document.createElement('style');
   css.textContent =
-    'html.avr-dark{filter:invert(1) hue-rotate(180deg);background:#101018;color-scheme:dark;}' +
-    'html.avr-dark img,html.avr-dark video,html.avr-dark iframe{filter:invert(1) hue-rotate(180deg);}' +
+    'html.avr-dark{background:#0a0a12;color-scheme:dark;}' +
+    'html.avr-dark body{background:#0a0a12 !important;color:#e9e9f2;}' +
+    // light surfaces -> dark graphite. Each rule has a twin for the
+    // browser-serialized form ("rgb(255, 255, 255)") that inline styles take
+    // after the reveal animation rewrites the style attribute.
+    'html.avr-dark [style*="background:#fff"]{background:#14141f !important;}' +
+    'html.avr-dark [style*="background: rgb(255, 255, 255)"]{background:#14141f !important;}' +
+    'html.avr-dark [style*="background:#f7f7fb"],html.avr-dark [style*="background: rgb(247, 247, 251)"]{background:#0a0a12 !important;}' +
+    'html.avr-dark [style*="background:#e8e8f2"],html.avr-dark [style*="background: rgb(232, 232, 242)"]{background:#14141f !important;}' +
+    'html.avr-dark [style*="background:rgba(255,255,255,0.88)"]{background:rgba(22,22,34,0.92) !important;}' +
+    'html.avr-dark [style*="border:1px solid rgba(11,11,22"],html.avr-dark [style*="border: 1px solid rgba(11, 11, 22"]{border-color:rgba(255,255,255,0.1) !important;}' +
+    // dark text -> light
+    'html.avr-dark [style*="color:#0b0b16"]{color:#f0f0f6 !important;}' +
+    'html.avr-dark [style*="color:#3c3c50"]{color:#c8c8da !important;}' +
+    'html.avr-dark [style*="color:#5c5c72"]{color:#a6a6bc !important;}' +
+    'html.avr-dark [style*="color:#5a5a70"]{color:#a6a6bc !important;}' +
+    'html.avr-dark [style*="color:#2f4fd8"]{color:#8fa4ff !important;}' +
+    // nav pill / mobile bar / dropdown
+    'html.avr-dark nav{background:rgba(14,14,24,0.78) !important;border-color:rgba(255,255,255,0.1) !important;}' +
+    'html.avr-dark nav.avr-nav{background:rgba(12,12,20,0.94) !important;border-bottom-color:rgba(255,255,255,0.08) !important;}' +
+    'html.avr-dark nav.avr-nav > div{background:rgba(16,16,26,0.97) !important;border-color:rgba(255,255,255,0.1) !important;}' +
+    'html.avr-dark .avr-burger{color:#f0f0f6 !important;}' +
+    // home hero (mobile light layout)
+    'html.avr-dark .avr-hero{background:#0a0a12 !important;}' +
+    'html.avr-dark .avr-hero-content{color:#f0f0f6 !important;}' +
+    'html.avr-dark .avr-hero-overline{color:#a6a6bc !important;}' +
+    'html.avr-dark .avr-hero-tagline{color:rgba(240,240,246,0.85) !important;}' +
+    'html.avr-dark .avr-hero-cta2{background:rgba(255,255,255,0.1) !important;border:1px solid rgba(255,255,255,0.3) !important;color:#fff !important;}' +
+    // toggles
     '.avr-toggle{border:1px solid rgba(11,11,22,0.15);background:transparent;color:#3c3c50;border-radius:100px;padding:6px 11px;font-family:Manrope,sans-serif;font-size:13px;font-weight:700;cursor:pointer;line-height:1;}' +
-    '.avr-toggle:hover{border-color:#7a3ff2;color:#7a3ff2;}';
+    '.avr-toggle:hover{border-color:#7a3ff2;color:#7a3ff2;}' +
+    'html.avr-dark .avr-toggle{border-color:rgba(255,255,255,0.25);color:#c8c8da;}' +
+    'html.avr-dark .avr-toggle:hover{border-color:#9d7bff;color:#9d7bff;}';
   document.head.appendChild(css);
   if (theme === 'dark') document.documentElement.classList.add('avr-dark');
 
