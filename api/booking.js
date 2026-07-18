@@ -51,10 +51,10 @@ module.exports = async (req, res) => {
 
   try {
     await ensure(sql);
-    await sql`INSERT INTO bookings (name, phone, service, date, time)
+    await sql`INSERT INTO avrrora_bookings (name, phone, service, date, time)
               VALUES (${name}, ${phone}, ${service || null}, ${date}, ${time})`;
   } catch (e) {
-    if (String(e.message || '').includes('bookings_slot')) {
+    if (String(e.message || '').includes('avrrora_bookings_slot')) {
       return res.status(409).json({ error: 'Цей час щойно зайняли — оберіть, будь ласка, інший.' });
     }
     console.error('DB error in booking:', e);

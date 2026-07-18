@@ -25,7 +25,7 @@ function db() {
 function ensure(s) {
   if (!ready) {
     ready = (async () => {
-      await s`CREATE TABLE IF NOT EXISTS bookings (
+      await s`CREATE TABLE IF NOT EXISTS avrrora_bookings (
         id serial PRIMARY KEY,
         name text NOT NULL,
         phone text NOT NULL,
@@ -36,8 +36,8 @@ function ensure(s) {
         created_at timestamptz NOT NULL DEFAULT now()
       )`;
       // One active booking per slot; cancelled ones free the slot again.
-      await s`CREATE UNIQUE INDEX IF NOT EXISTS bookings_slot
-              ON bookings(date, time) WHERE status <> 'cancelled'`;
+      await s`CREATE UNIQUE INDEX IF NOT EXISTS avrrora_bookings_slot
+              ON avrrora_bookings(date, time) WHERE status <> 'cancelled'`;
     })();
   }
   return ready;

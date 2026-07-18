@@ -11,7 +11,7 @@ module.exports = async (req, res) => {
 
   try {
     await ensure(sql);
-    const rows = await sql`SELECT time FROM bookings WHERE date = ${date} AND status <> 'cancelled'`;
+    const rows = await sql`SELECT time FROM avrrora_bookings WHERE date = ${date} AND status <> 'cancelled'`;
     res.status(200).json({ slots: SLOTS, taken: rows.map((r) => r.time) });
   } catch (e) {
     console.error('DB error in slots:', e);
