@@ -1,9 +1,13 @@
-// The site's AI assistant (Q&A only, powered by Gemini Flash).
+// The site's AI assistant (Q&A only).
 //   POST /api/chat { messages: [{role, text}...], chatId, lang }  -> { answer }
 //   GET  /api/chat  (admin, Bearer token)                         -> { logs, stats }
 // Knowledge comes from the live assets/content.json of this deployment, so
 // admin edits to services/prices are reflected without any retraining.
-// Env: GEMINI_API_KEY (required), GEMINI_MODEL (default gemini-2.5-flash).
+// Env (either provider works; CHAT_API_KEY wins when both are set):
+//   CHAT_API_KEY   — OpenAI-compatible provider key (e.g. cuberout.dev)
+//   CHAT_API_URL   — default https://api.cuberout.dev/v1/chat/completions
+//   CHAT_MODEL     — default deepseek-v4-flash
+//   GEMINI_API_KEY / GEMINI_MODEL (default gemini-2.5-flash)
 const { verifyToken } = require('./login.js');
 const { db, ensure } = require('./_lib.js');
 
@@ -58,8 +62,11 @@ async function handleChat(req, res) {
     return res.status(429).json({ error: 'Забагато запитів — зачекайте хвилинку.' });
   }
 
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) {
+  // Provider: an OpenAI-compatible endpoint (CHAT_API_*) takes priority;
+  // Gemini (GEMINI_API_KEY) remains as the alternative.
+  const oaiKey = process.env.CHAT_API_KEY;
+  const geminiKey = process.env.GEMINI_API_KEY;
+  if (!oaiKey && !geminiKey) {
     return res.status(503).json({ error: 'Консультант тимчасово недоступний — зателефонуйте нам, будь ласка.' });
   }
 
@@ -100,24 +107,62 @@ async function handleChat(req, res) {
     facts
   ].join('\n');
 
-  const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
   let answer;
   try {
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: system }] },
-        contents: messages.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
-        generationConfig: { maxOutputTokens: 512, temperature: 0.4 }
-      })
-    });
-    const data = await r.json().catch(() => ({}));
-    if (!r.ok) throw new Error('Gemini ' + r.status + ': ' + JSON.stringify(data).slice(0, 300));
-    answer = ((data.candidates || [])[0]?.content?.parts || []).map((p) => p.text || '').join('').trim();
-    if (!answer) throw new Error('empty answer: ' + JSON.stringify(data).slice(0, 300));
+    if (oaiKey) {
+      // OpenAI-compatible chat/completions (e.g. cuberout.dev). The model may
+      // be a reasoning model that spends tokens thinking before it answers,
+      // so the limit is generous and only message.content is used.
+      const url = process.env.CHAT_API_URL || 'https://api.cuberout.dev/v1/chat/completions';
+      const model = process.env.CHAT_MODEL || 'deepseek-v4-flash';
+      // The provider 500s on raw non-ASCII bytes, so escape everything to
+      // \uXXXX — byte-for-byte ASCII, semantically identical JSON.
+      const body = JSON.stringify({
+        model,
+        messages: [
+          { role: 'system', content: system },
+          ...messages.map((m) => ({ role: m.role === 'model' ? 'assistant' : 'user', content: m.text }))
+        ],
+        max_tokens: 2048,
+        temperature: 0.4
+      }).split('').map((c) => c.charCodeAt(0) > 127 ? String.fromCharCode(92) + 'u' + c.charCodeAt(0).toString(16).padStart(4, '0') : c).join('');
+      let lastErr;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const r = await fetch(url, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${oaiKey}`, 'Content-Type': 'application/json' },
+            body
+          });
+          const data = await r.json().catch(() => ({}));
+          if (!r.ok) throw new Error('chat api ' + r.status + ': ' + JSON.stringify(data).slice(0, 300));
+          answer = String(((data.choices || [])[0]?.message?.content) || '').trim();
+          if (!answer) throw new Error('empty answer: ' + JSON.stringify(data).slice(0, 300));
+          lastErr = null;
+          break;
+        } catch (e) {
+          lastErr = e; // the provider occasionally 500s cold; one retry
+        }
+      }
+      if (lastErr) throw lastErr;
+    } else {
+      const model = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: system }] },
+          contents: messages.map((m) => ({ role: m.role, parts: [{ text: m.text }] })),
+          generationConfig: { maxOutputTokens: 512, temperature: 0.4 }
+        })
+      });
+      const data = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error('Gemini ' + r.status + ': ' + JSON.stringify(data).slice(0, 300));
+      answer = ((data.candidates || [])[0]?.content?.parts || []).map((p) => p.text || '').join('').trim();
+      if (!answer) throw new Error('empty answer: ' + JSON.stringify(data).slice(0, 300));
+    }
   } catch (e) {
-    console.error('Gemini error:', e);
+    console.error('chat provider error:', e);
     return res.status(502).json({ error: 'Консультант тимчасово недоступний — зателефонуйте нам, будь ласка.' });
   }
 
