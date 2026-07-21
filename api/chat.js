@@ -13,12 +13,24 @@ const { db, ensure } = require('./_lib.js');
 
 // ---- knowledge cache (per warm instance) ----
 let knowledge = { text: null, at: 0 };
+// Load content.json. Primary source is the copy bundled with this deployment
+// (always current: every admin publish redeploys). We deliberately do NOT
+// fetch the per-deployment VERCEL_URL — it sits behind Vercel deployment
+// protection and returns an HTML login page, not JSON. The public production
+// domain is the network fallback.
+async function loadContent() {
+  try {
+    // Bundled at build time; require's cache is fine (refreshed each deploy).
+    return require('../assets/content.json');
+  } catch (e) {
+    const r = await fetch('https://avrrora-salon.vercel.app/assets/content.json');
+    if (!r.ok) throw new Error('content.json fetch failed: ' + r.status);
+    return r.json();
+  }
+}
 async function getKnowledge() {
   if (knowledge.text && Date.now() - knowledge.at < 5 * 60 * 1000) return knowledge.text;
-  const base = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://avrrora-salon.vercel.app';
-  const r = await fetch(`${base}/assets/content.json`);
-  if (!r.ok) throw new Error('content.json fetch failed');
-  const c = await r.json();
+  const c = await loadContent();
   const lines = [];
   lines.push('# Послуги та ціни');
   for (const cat of c.services.categories) {
