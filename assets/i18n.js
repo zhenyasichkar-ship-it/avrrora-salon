@@ -285,6 +285,21 @@
     'FAQ — Avrrora': 'FAQ — Avrrora',
     'Контакти — Avrrora': 'Contacts — Avrrora',
     'Сторінку не знайдено — Avrrora': 'Page not found — Avrrora',
+    // chat widget
+    'Консультант Avrrora': 'Avrrora Assistant',
+    'Питання про послуги, ціни та запис': 'Questions about services, prices and booking',
+    'Привіт! Я допоможу з питаннями про послуги, ціни та запис. Що вас цікавить?':
+      "Hi! I can help with questions about services, prices and booking. What would you like to know?",
+    'Ціни на фарбування': 'Colouring prices',
+    'Як записатися?': 'How do I book?',
+    'Де ви знаходитесь?': 'Where are you located?',
+    'Ваше питання…': 'Your question…',
+    'Чат-консультант': 'Chat assistant',
+    'Закрити': 'Close',
+    'Щось пішло не так — спробуйте ще раз або зателефонуйте нам.': 'Something went wrong — try again or give us a call.',
+    'Немає зв\'язку з сервером — спробуйте ще раз пізніше.': 'No connection to the server — please try again later.',
+    'Забагато запитів — зачекайте хвилинку.': 'Too many requests — please wait a minute.',
+    'Консультант тимчасово недоступний — зателефонуйте нам, будь ласка.': 'The assistant is temporarily unavailable — please call us.',
     // misc
     'Інтер\'єр салону Avrrora': 'Avrrora salon interior',
     'Карта — салон Avrrora': 'Map — Avrrora salon'

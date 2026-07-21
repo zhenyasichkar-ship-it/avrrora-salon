@@ -38,6 +38,15 @@ function ensure(s) {
       // One active booking per slot; cancelled ones free the slot again.
       await s`CREATE UNIQUE INDEX IF NOT EXISTS avrrora_bookings_slot
               ON avrrora_bookings(date, time) WHERE status <> 'cancelled'`;
+      // Q&A log of the site's AI assistant, shown in the admin panel.
+      await s`CREATE TABLE IF NOT EXISTS avrrora_chat_log (
+        id serial PRIMARY KEY,
+        chat_id text,
+        question text NOT NULL,
+        answer text NOT NULL,
+        lang text,
+        created_at timestamptz NOT NULL DEFAULT now()
+      )`;
     })();
   }
   return ready;

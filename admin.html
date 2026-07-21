@@ -63,6 +63,7 @@ textarea{resize:vertical;min-height:70px;}
 
   <div class="row row-wrap" style="gap:8px;margin-bottom:26px;">
     <button class="tab active" data-tab="requests" type="button" id="tab-requests">Заявки</button>
+    <button class="tab" data-tab="chatlog" type="button">Чат-бот</button>
     <button class="tab" data-tab="services" type="button">Послуги та ціни</button>
     <button class="tab" data-tab="works" type="button">Роботи</button>
     <button class="tab" data-tab="faq" type="button">FAQ</button>
@@ -71,6 +72,7 @@ textarea{resize:vertical;min-height:70px;}
   </div>
 
   <div id="pane-requests" class="pane active"></div>
+  <div id="pane-chatlog" class="pane"></div>
   <div id="pane-services" class="pane"></div>
   <div id="pane-works" class="pane"></div>
   <div id="pane-faq" class="pane"></div>
@@ -218,7 +220,70 @@ textarea{resize:vertical;min-height:70px;}
   }
 
   // ---------- panes ----------
-  function renderAll() { renderServices(); renderWorks(); renderFaq(); renderTexts(); renderCalc(); loadRequests(); }
+  function renderAll() { renderServices(); renderWorks(); renderFaq(); renderTexts(); renderCalc(); loadRequests(); loadChatLog(); }
+
+  // ----- Чат-бот (Q&A log of the site's AI assistant) -----
+  function loadChatLog() {
+    var host = document.getElementById('pane-chatlog');
+    host.innerHTML = '<div class="card"><p class="muted" style="margin:0;">Завантажуємо історію чату…</p></div>';
+    fetch('/api/chat', { headers: { Authorization: 'Bearer ' + token() } })
+      .then(function (r) {
+        return r.json().catch(function () { throw new Error('Сервер недоступний'); })
+          .then(function (d) { return { ok: r.ok, d: d }; });
+      })
+      .then(function (res) {
+        if (!res.ok) throw new Error(res.d.error || 'Помилка завантаження');
+        renderChatLog(res.d.logs || [], res.d.stats || {});
+      })
+      .catch(function (e) {
+        host.innerHTML = '';
+        host.appendChild(el('div', { class: 'card' }, [
+          el('p', { style: 'margin:0;color:#c22;font-weight:600;', text: String(e.message || e) }),
+          el('p', { class: 'muted', style: 'margin:10px 0 0;', text: 'Історія з\'явиться після перших питань відвідувачів. Для роботи чату потрібен GEMINI_API_KEY у Vercel (див. ADMIN.md).' }),
+          el('div', { style: 'margin-top:14px;' }, [
+            el('button', { class: 'btn-sm', type: 'button', text: '↻ Спробувати ще раз', onclick: loadChatLog })
+          ])
+        ]));
+      });
+  }
+
+  function renderChatLog(logs, stats) {
+    var host = document.getElementById('pane-chatlog');
+    host.innerHTML = '';
+
+    var tiles = [
+      ['Всього питань', stats.total || 0],
+      ['Сьогодні', stats.today || 0],
+      ['Розмов', stats.chats || 0]
+    ];
+    host.appendChild(el('div', { style: 'display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:16px;' },
+      tiles.map(function (t) {
+        return el('div', { class: 'card', style: 'padding:16px 18px;text-align:center;' }, [
+          el('p', { style: 'margin:0;font-family:\'Unbounded\',sans-serif;font-weight:600;font-size:26px;color:#7a3ff2;', text: String(t[1]) }),
+          el('p', { class: 'muted', style: 'margin:4px 0 0;font-size:13px;', text: t[0] })
+        ]);
+      })
+    ));
+
+    host.appendChild(el('div', { class: 'row', style: 'gap:8px;margin-bottom:16px;' }, [
+      el('button', { class: 'btn-sm', type: 'button', text: '↻ Оновити', onclick: loadChatLog })
+    ]));
+
+    if (!logs.length) {
+      host.appendChild(el('div', { class: 'card' }, [el('p', { class: 'muted', style: 'margin:0;', text: 'Питань поки не було. Історія з\'явиться, щойно відвідувачі почнуть писати чат-боту.' })]));
+      return;
+    }
+
+    logs.forEach(function (row) {
+      var when = new Date(row.created_at);
+      var stamp = isNaN(when) ? '' : when.toLocaleString('uk-UA', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      host.appendChild(el('div', { class: 'card', style: 'margin-bottom:10px;padding:16px 20px;' }, [
+        el('p', { class: 'muted', style: 'margin:0 0 8px;font-size:12px;', text: stamp + (row.lang === 'en' ? ' · EN' : '') + (row.chat_id ? ' · ' + String(row.chat_id).slice(-6) : '') }),
+        el('p', { style: 'margin:0;font-weight:800;font-size:15px;', text: row.question }),
+        el('p', { class: 'muted', style: 'margin:8px 0 0;font-size:14px;line-height:1.6;white-space:pre-wrap;', text: row.answer })
+      ]));
+    });
+  }
 
   // ----- Заявки (bookings from the calendar form) -----
   var reqScope = 'active';
